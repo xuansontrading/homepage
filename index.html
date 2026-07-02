@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xuân Sơn Trading — Premium Vietnamese Foods</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #1a1714;
+  --cream: #faf6f0;
+  --warm: #f0e8da;
+  --gold: #c49a3c;
+  --gold-light: #d4af5a;
+  --terracotta: #b85c38;
+  --sage: #6b7c5e;
+  --sage-light: #8a9e78;
+  --moss: #3d4a35;
+  --white: #ffffff;
+  --text-muted: #6b6560;
+  --border: rgba(26,23,20,0.08);
+  --font-display: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== PRELOADER ===== */
+.preloader {
+  position: fixed; inset: 0; background: var(--ink); z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+.preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.preloader-text {
+  font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem);
+  color: var(--gold); letter-spacing: 0.15em;
+  animation: preloaderPulse 1.2s ease-in-out infinite;
+}
+@keyframes preloaderPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+/* ===== NAVIGATION ===== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 clamp(2rem, 6vw, 6rem); height: 90px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav.scrolled {
+  background: rgba(250,246,240,0.92); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); box-shadow: 0 1px 0 var(--border); height: 68px;
+}
+.nav-logo { display: flex; align-items: center; gap: 0; text-decoration: none; color: var(--ink); z-index: 1001; min-width: 0; overflow: hidden; }
+.nav-logo-icon {
+  width: 58px; height: 58px; background: var(--gold); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--white); font-family: var(--font-display); font-weight: 700; font-size: 1.4rem;
+}
+.nav-logo-text { font-family: var(--font-body); font-size: 2.6rem; font-weight: 500; letter-spacing: 0.2em; white-space: nowrap; display: flex; align-items: baseline; gap: 12px; color: var(--terracotta); }
+.nav-logo-text span {
+  display: inline; font-size: 0.65rem; font-family: var(--font-body); font-weight: 300;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted);
+}
+.nav-links { display: flex; align-items: center; gap: clamp(1rem, 2vw, 2.5rem); list-style: none; }
+.nav-links a {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  text-decoration: none; color: var(--ink); position: relative; padding: 8px 10px; border-radius: 4px;
+  transition: color 0.3s ease, background 0.3s ease;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 2px; left: 14px; right: 14px; width: auto; height: 2px;
+  background: var(--terracotta); transform: scaleX(0); transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-links a:hover { color: var(--terracotta); background: rgba(184,92,56,0.08); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.lang-toggle {
+  display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  border: 1.5px solid var(--border); border-radius: 100px; padding: 6px 14px;
+  transition: all 0.3s ease; background: transparent; color: var(--ink);
+}
+.lang-toggle:hover { border-color: var(--gold); color: var(--gold); }
+.lang-toggle .sep { opacity: 0.3; }
+.lang-toggle .lang-active { color: var(--terracotta); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+.nav-hamburger {
+  display: none; flex-direction: column; justify-content: center; align-items: center; gap: 6px; cursor: pointer;
+  z-index: 10002; background: none; border: none; padding: 10px; width: 44px; height: 44px; flex-shrink: 0;
+}
+.nav-hamburger span { display: block; width: 26px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
+.nav-hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.nav-hamburger.active span:nth-child(2) { opacity: 0; }
+.nav-hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.mobile-nav {
+  position: fixed; inset: 0; background: var(--cream); z-index: 9999;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem;
+  padding: 0 1rem;
+  opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; pointer-events: none;
+}
+.mobile-nav.active { opacity: 1; visibility: visible; pointer-events: all; }
+.mobile-nav a { font-family: var(--font-display); font-size: clamp(0.9rem, 5.2vw, 1.2rem); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; text-decoration: none; color: var(--ink); white-space: nowrap; text-align: center; transition: color 0.3s ease; }
+.mobile-nav a:hover { color: var(--gold); }
+
+/* ===== PLACEHOLDER IMAGES ===== */
+.img-placeholder {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; position: relative; overflow: hidden;
+}
+.img-placeholder .img-icon { font-size: 3rem; margin-bottom: 0.8rem; opacity: 0.7; }
+.img-placeholder .img-label {
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 500;
+  letter-spacing: 0.05em; opacity: 0.8;
+}
+.img-placeholder .img-sublabel { font-size: 0.7rem; opacity: 0.5; margin-top: 0.3rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.ph-hero { background: linear-gradient(135deg, #d4a574 0%, #c4956a 25%, #b8845c 50%, #a67348 75%, #946040 100%); color: var(--white); }
+.ph-story { background: linear-gradient(160deg, #e8d5b8 0%, #d4c0a0 40%, #c9b08e 100%); color: var(--ink); }
+.ph-featured { background: linear-gradient(145deg, #8b6914 0%, #a07d28 30%, #c49a3c 60%, #d4a94a 100%); color: var(--white); }
+.ph-product1 { background: linear-gradient(135deg, #f5efe5, #e8dcc8); color: var(--ink); }
+.ph-product2 { background: linear-gradient(135deg, #f0ebe0, #e0d5c0); color: var(--ink); }
+.ph-product3 { background: linear-gradient(135deg, #e8e0d0, #ddd2be); color: var(--ink); }
+.ph-product4 { background: linear-gradient(135deg, #f2ece2, #e5dbc5); color: var(--ink); }
+.ph-news1 { background: linear-gradient(135deg, #d9cbb5, #c8b89e); color: var(--ink); }
+.ph-news2 { background: linear-gradient(135deg, #ddd0b8, #ccbfa5); color: var(--ink); }
+.ph-news3 { background: linear-gradient(135deg, #e0d4bc, #d0c3a8); color: var(--ink); }
+
+.img-placeholder::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Cpath d='M20 0L40 20L20 40L0 20z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ===== HERO ===== */
+.hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+.hero-content {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(6rem, 10vh, 10rem) clamp(2rem, 6vw, 6rem); position: relative; z-index: 2;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 0.7rem;
+  font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards;
+}
+.hero-badge::before { content: ''; width: 40px; height: 1.5px; background: var(--gold); }
+.hero-title {
+  font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 400;
+  line-height: 1.15; letter-spacing: 0; color: var(--ink);
+  margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.8s forwards;
+}
+.hero-title em { font-style: italic; color: var(--terracotta); }
+.hero-desc {
+  font-size: 1.05rem; line-height: 1.7; color: var(--text-muted);
+  max-width: 440px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s ease 1s forwards;
+}
+.hero-actions { display: flex; gap: 1rem; align-items: center; opacity: 0; animation: fadeUp 0.8s ease 1.2s forwards; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-body);
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; padding: 16px 36px; border-radius: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; border: none;
+}
+.btn-primary { background: var(--ink); color: var(--cream); }
+.btn-primary:hover { background: var(--terracotta); }
+.btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+.btn-outline:hover { background: var(--ink); color: var(--cream); }
+.btn-arrow { transition: transform 0.3s ease; }
+.btn:hover .btn-arrow { transform: translateX(4px); }
+
+.hero-visual { position: relative; overflow: hidden; background: var(--warm); min-height: 300px; }
+.hero-slideshow { position: absolute; inset: 0; }
+.hero-slide {
+  position: absolute; inset: 0; opacity: 0; display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.8s ease; background: var(--warm);
+}
+.hero-slide.active { opacity: 1; }
+.hero-slide img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center;
+  animation: slideZoom 5s ease-in-out infinite alternate;
+  display: block;
+}
+@keyframes slideZoom { from { transform: scale(1); } to { transform: scale(1.03); } }
+.hero-slide-dots {
+  display: flex; gap: 10px; margin-top: 0.8rem; z-index: 5;
+}
+.hero-dot {
+  width: 10px; height: 10px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.6);
+  background: transparent; cursor: pointer; transition: all 0.3s ease; padding: 0;
+}
+.hero-dot.active { background: var(--gold); border-color: var(--gold); width: 28px; border-radius: 10px; }
+.hero-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+  padding: 4rem 2rem 1.8rem; 
+  background: linear-gradient(transparent 0%, rgba(61,74,53,0.85) 50%, rgba(61,74,53,0.95) 100%);
+  color: var(--white);
+}
+.hero-product-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+.hero-product-name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+.hero-stats {
+  position: absolute; bottom: 4rem; left: clamp(2rem, 6vw, 6rem);
+  display: flex; gap: 3rem; opacity: 0; animation: fadeUp 0.8s ease 1.4s forwards;
+}
+.hero-stat-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; color: var(--gold); }
+.hero-stat-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-top: 2px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes heroReveal { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+
+/* ===== MARQUEE ===== */
+.marquee { background: var(--ink); padding: 18px 0; overflow: hidden; }
+.marquee-track { display: flex; animation: marqueeScroll 30s linear infinite; width: max-content; }
+.marquee-item {
+  display: flex; align-items: center; gap: 2rem; padding: 0 2rem; white-space: nowrap;
+  font-family: var(--font-display); font-size: 1rem; font-weight: 400;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold);
+}
+.marquee-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; opacity: 0.4; }
+@keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ===== SECTIONS SHARED ===== */
+.section { padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem); }
+.section-label {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 12px;
+}
+.section-label::before { content: ''; width: 30px; height: 1.5px; background: var(--gold); }
+.section-title {
+  font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 400;
+  line-height: 1.15; max-width: 600px; margin-bottom: 1.5rem;
+}
+.section-title em { font-style: italic; color: var(--terracotta); }
+
+/* ===== STORY ===== */
+.story { background: var(--white); }
+.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 6rem); align-items: center; margin-top: 3rem; }
+.story-image { position: relative; aspect-ratio: 4/5; overflow: hidden; border-radius: 2px; }
+.story-image-accent {
+  position: absolute; bottom: -20px; right: -20px; width: 160px; height: 160px;
+  border: 2px solid var(--gold); opacity: 0.3; border-radius: 2px;
+}
+.story-text p { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem; }
+.story-values {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem;
+  padding-top: 2.5rem; border-top: 1px solid var(--border);
+}
+.story-value-icon {
+  width: 36px; height: 36px; background: rgba(196,154,60,0.1); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.8rem; color: var(--gold); font-size: 1rem;
+}
+.story-value h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; }
+.story-value p { font-size: 0.82rem !important; line-height: 1.5 !important; margin-bottom: 0 !important; }
+
+/* ===== FEATURED ===== */
+.featured { background: var(--ink); color: var(--cream); position: relative; overflow: hidden; }
+.featured::before {
+  content: ''; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(196,154,60,0.08), transparent 70%); pointer-events: none;
+}
+.featured .section-title { color: var(--cream); }
+.featured-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 2rem; }
+.featured-image { position: relative; aspect-ratio: 1; border-radius: 2px; overflow: hidden; }
+.featured-badge {
+  position: absolute; top: 20px; left: 20px; background: var(--gold); color: var(--ink);
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 8px 16px; z-index: 2;
+}
+.featured-info h3 { font-family: var(--font-display); font-size: 2.5rem; font-weight: 400; margin-bottom: 1rem; }
+.featured-info .price { font-family: var(--font-display); font-size: 1.5rem; color: var(--gold); margin-bottom: 1.5rem; }
+.featured-info p { color: rgba(250,246,240,0.6); line-height: 1.8; margin-bottom: 2rem; }
+.featured-details { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 2.5rem; }
+.featured-detail { padding: 1rem; border: 1px solid rgba(250,246,240,0.1); border-radius: 2px; }
+.featured-detail-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(250,246,240,0.4); margin-bottom: 4px; }
+.featured-detail-value { font-family: var(--font-display); font-size: 1.1rem; color: var(--gold-light); }
+
+/* ===== PRODUCTS ===== */
+.products { background: var(--cream); }
+.products-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+.products-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
+.product-card {
+  position: relative; background: var(--white); border-radius: 2px; overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer;
+}
+.product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(26,23,20,0.1); }
+.product-card[onclick] { cursor: pointer; }
+.product-card-image { aspect-ratio: 1; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.product-card-image img { width: 80%; height: 80%; object-fit: contain; }
+.product-card-body { padding: 1.5rem; }
+.product-card-cat { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.5rem; }
+.product-card-name { font-family: var(--font-display); font-size: 0.95rem; font-weight: 500; margin-bottom: 0.4rem; }
+.product-card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+.product-card-tag {
+  position: absolute; top: 12px; right: 12px; background: var(--terracotta); color: var(--white);
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 10px;
+}
+
+/* ===== CATALOG CTA ===== */
+.catalog-cta { background: var(--sage); color: var(--white); text-align: center; position: relative; overflow: hidden; }
+.catalog-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.catalog-cta .section-title { color: var(--white); max-width: 700px; margin: 0 auto 1rem; }
+.catalog-cta p { color: rgba(255,255,255,0.7); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.btn-gold { background: var(--gold); color: var(--ink); font-weight: 700; }
+.btn-gold:hover { background: var(--gold-light); }
+
+/* ===== NEWS ===== */
+.news { background: var(--white); }
+.news-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+.news-card { border-radius: 2px; overflow: hidden; background: var(--cream); transition: all 0.4s ease; cursor: pointer; }
+.news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(26,23,20,0.08); }
+.news-card-image { aspect-ratio: 16/10; overflow: hidden; }
+.news-card-body { padding: 1.5rem; }
+.news-card-date { font-size: 0.68rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 0.6rem; }
+.news-card-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 500; line-height: 1.3; margin-bottom: 0.5rem; }
+.news-card-excerpt { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+.news-card-link {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); text-decoration: none;
+  margin-top: 1rem; transition: gap 0.3s ease;
+}
+.news-card-link:hover { gap: 10px; }
+
+/* ===== CONTACT ===== */
+.contact { background: var(--warm); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+.contact-info-block { margin-bottom: 2rem; }
+.contact-info-block h4 { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem; }
+.contact-info-block p { color: var(--text-muted); line-height: 1.7; }
+.contact-info-block a { color: var(--ink); text-decoration: none; transition: color 0.3s ease; }
+.contact-info-block a:hover { color: var(--gold); }
+.contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+.form-group input, .form-group textarea, .form-group select {
+  font-family: var(--font-body); font-size: 0.9rem; padding: 14px 16px;
+  border: 1.5px solid var(--border); background: var(--white); color: var(--ink);
+  border-radius: 2px; outline: none; transition: border-color 0.3s ease;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--gold); }
+.form-group textarea { resize: vertical; min-height: 120px; }
+
+/* ===== FOOTER ===== */
+.footer { background: var(--ink); color: rgba(250,246,240,0.6); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 6vw, 6rem); }
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(250,246,240,0.08); }
+.footer-brand-name { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--cream); margin-bottom: 1rem; }
+.footer-brand p { max-width: 300px; line-height: 1.7; font-size: 0.88rem; }
+.footer-col h5 { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream); margin-bottom: 1.2rem; }
+.footer-col a { display: block; color: rgba(250,246,240,0.5); text-decoration: none; font-size: 0.88rem; margin-bottom: 0.7rem; transition: color 0.3s ease; }
+.footer-col a:hover { color: var(--gold); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; font-size: 0.78rem; }
+.footer-socials { display: flex; gap: 1.2rem; }
+.footer-socials a {
+  width: 36px; height: 36px; border: 1px solid rgba(250,246,240,0.15); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; text-decoration: none;
+  color: rgba(250,246,240,0.5); font-size: 0.8rem; transition: all 0.3s ease;
+}
+.footer-socials a:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ===== SCROLL ANIMATIONS ===== */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .products-grid { grid-template-columns: repeat(3, 1fr); }
+  .featured-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-content { order: 2; min-width: 0; padding-left: 1.2rem; padding-right: 1.2rem; }
+  .hero-actions { flex-wrap: wrap; }
+  .hero-visual { order: 1; width: 100%; aspect-ratio: 4/3; position: relative; margin-top: 90px; min-height: 0; }
+  .hero-stats { position: relative; bottom: auto; left: auto; padding: 0 clamp(2rem,6vw,6rem); margin-top: -2rem; margin-bottom: 2rem; }
+  .story-grid { grid-template-columns: 1fr; }
+  .story-image { order: -1; }
+  .products-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  .nav-logo-text { font-size: 1.5rem; letter-spacing: 0.12em; }
+  .nav-logo-text span { font-size: 0.55rem; letter-spacing: 0.15em; }
+  .nav { padding: 0 1.2rem; gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .nav { padding: 0 1rem; }
+  .nav-logo-text { font-size: 1.3rem; letter-spacing: 0.1em; }
+  .nav-logo-text span { display: none; }
+}
+
+
+
+
+/* Catalog subgroup labels */
+.catalog-subgroup-label {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin: 2rem 0 1rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
+}
+.catalog-subgroup-label::before { content: ''; width: 20px; height: 1.5px; background: var(--gold); }
+.catalog-product-flavor {
+  font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; line-height: 1.3;
+}
+
+
+.catalog-storage-group { border-bottom: 1px solid var(--border); }
+.catalog-storage-label {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%; background: none; border: none; cursor: pointer;
+  padding: 0.75rem 1.5rem; font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
+  transition: color 0.2s;
+}
+.catalog-storage-label:hover { color: var(--gold); }
+.catalog-storage-arrow { font-size: 0.8rem; transition: transform 0.3s; }
+.catalog-storage-group.open .catalog-storage-arrow { transform: rotate(180deg); }
+.catalog-storage-items { overflow: hidden; }
+
+/* ===== CATALOG OVERLAY ===== */
+.catalog-overlay {
+  position: fixed; inset: 0; background: var(--cream); z-index: 2000;
+  opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
+  display: flex; flex-direction: column;
+}
+.catalog-overlay.active { opacity: 1; visibility: visible; }
+
+/* Top bar */
+.catalog-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem clamp(1.5rem, 5vw, 5rem); border-bottom: 1px solid var(--border);
+  background: var(--cream); position: sticky; top: 0; z-index: 10; flex-shrink: 0;
+}
+.catalog-topbar-title {
+  font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; letter-spacing: 0.02em;
+}
+.catalog-close {
+  width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--border);
+  background: transparent; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 1.1rem; transition: all 0.3s ease; color: var(--ink);
+}
+.catalog-close:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+/* Body: sidebar + content */
+.catalog-body {
+  display: flex; flex: 1; overflow: hidden;
+}
+
+/* Left sidebar */
+.catalog-sidebar {
+  width: 220px; flex-shrink: 0; overflow-y: auto; padding: 2rem 0;
+  border-right: 1px solid var(--border); background: var(--cream);
+}
+.catalog-sidebar-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-muted); padding: 0 1.5rem; margin-bottom: 0.6rem;
+}
+.catalog-sidebar-item {
+  display: block; width: 100%; text-align: left; background: none; border: none;
+  padding: 0.6rem 1.5rem; font-family: var(--font-body); font-size: 0.88rem;
+  color: var(--ink); cursor: pointer; transition: all 0.2s ease; border-left: 2px solid transparent;
+}
+.catalog-sidebar-item:hover { color: var(--gold); background: rgba(196,154,60,0.05); }
+.catalog-sidebar-item.active { color: var(--gold); border-left-color: var(--gold); font-weight: 600; }
+
+/* Right content */
+.catalog-content {
+  flex: 1; overflow-y: auto; padding: 2.5rem clamp(1.5rem, 4vw, 4rem);
+}
+.catalog-content-title {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+}
+.catalog-products-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem;
+}
+.catalog-product-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 2px;
+  overflow: hidden; transition: all 0.3s ease; cursor: pointer;
+}
+.catalog-product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(26,23,20,0.1); border-color: var(--gold); }
+.catalog-product-img {
+  aspect-ratio: 1; background: #ffffff;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  isolation: isolate;
+}
+.catalog-product-img img {
+  width: 85%; height: 85%; object-fit: contain;
+}
+.catalog-product-info { padding: 0.9rem 1rem 1rem; border-top: 1px solid var(--border); }
+.catalog-product-name {
+  font-family: var(--font-display); font-size: 0.95rem; font-weight: 500; line-height: 1.3; color: var(--ink);
+}
+.catalog-empty {
+  text-align: center; padding: 4rem 2rem; color: var(--text-muted);
+  font-family: var(--font-display); font-size: 1.3rem;
+}
+@media (max-width: 768px) {
+  .catalog-body { flex-direction: column; }
+  .catalog-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 1rem 0; display: flex; overflow-x: auto; }
+  .catalog-sidebar-label { display: none; }
+  .catalog-sidebar-item { white-space: nowrap; padding: 0.5rem 1rem; border-left: none; border-bottom: 2px solid transparent; }
+  .catalog-sidebar-item.active { border-bottom-color: var(--gold); border-left-color: transparent; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader"><div class="preloader-text">XUÂN SƠN TRADING</div></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-text">XUÂN SƠN<span>Commercial &amp; Services Trading</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#story" data-i18n="nav_story">Our Story</a></li>
+    <li><a href="#featured" data-i18n="nav_exclusive">Private Label</a></li>
+    <li><a href="#products" data-i18n="nav_products">Products</a></li>
+    <li><a href="#contact" data-i18n="nav_contact">Contact Us</a></li>
+    <li><button class="lang-toggle" onclick="toggleLang()"><span class="lang-en lang-active">EN</span><span class="sep">|</span><span class="lang-vi">VI</span></button></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#story" onclick="closeMobile()" data-i18n="nav_story">Our Story</a>
+  <a href="#featured" onclick="closeMobile()" data-i18n="nav_exclusive_full">Private Label</a>
+  <a href="#products" onclick="closeMobile()" data-i18n="nav_products">Products</a>
+  <a href="#contact" onclick="closeMobile()" data-i18n="nav_contact">Contact Us</a>
+  <button class="lang-toggle" onclick="toggleLang()"><span class="lang-en lang-active">EN</span><span class="sep">|</span><span class="lang-vi">VI</span></button>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge" data-i18n="hero_badge">What sets us apart</div>
+    <h1 class="hero-title" data-i18n-html="hero_title"><span style="color:#b85c38;">Vietnam</span> in every jar,<br>every bite, every meal</h1>
+    <p class="hero-desc" data-i18n="hero_desc">Every product we carry has a story, a region, a tradition, a family that perfected it over generations. We did not just source these from Vietnam. We grew up with them. And now, with the same care and pride, we bring them to the United States — authentic in soul, elevated in quality, and ready to be part of your story too.</p>
+    <div class="hero-actions">
+      <a href="#story" class="btn btn-outline" data-i18n="hero_btn_story">Our Story</a>
+      <a href="#products" class="btn btn-primary" data-i18n="hero_btn_products">Explore Products <span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-slideshow">
+      <div class="hero-slide active" onclick="goToSlide(0)">
+        <img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212054/image_001_ojfkwo.jpg" alt="Phê La Milk Tea Kit">
+      </div>
+      <div class="hero-slide" onclick="goToSlide(1)">
+        <img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212138/image_002_prva09.jpg" alt="Cộng Salted Cream Coffee">
+      </div>
+      <div class="hero-slide" onclick="goToSlide(2)">
+        <img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212138/image_003_mwstgg.jpg" alt="Sa Giang Shrimp Chips">
+      </div>
+    </div>
+    <div class="hero-overlay">
+      <div class="hero-product-label" data-i18n="hero_product_label">Trending Products</div>
+      <div class="hero-product-name" id="heroProductName">Phê La Milk Tea Kit</div>
+      <div class="hero-slide-dots"><button class="hero-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button><button class="hero-dot" onclick="goToSlide(1)" aria-label="Slide 2"></button><button class="hero-dot" onclick="goToSlide(2)" aria-label="Slide 3"></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <div class="marquee-item">Beverage <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Coffee & Tea <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Condiments, Spices & Baking <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Cookies, Snacks & Candy <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Dry Goods <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Flour & Mixes <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Noodles & Pasta <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Instant Noodles <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Preserved Goods <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Sauces <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Non-Food Items <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Beverage <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Coffee & Tea <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Condiments, Spices & Baking <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Cookies, Snacks & Candy <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Dry Goods <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Flour & Mixes <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Noodles & Pasta <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Instant Noodles <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Preserved Goods <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Sauces <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Non-Food Items <span class="marquee-dot"></span></div>
+    </div>
+</div>
+</div>
+
+<!-- OUR STORY -->
+<section class="section story" id="story">
+  <div class="section-label reveal" data-i18n="story_label">Our Story</div>
+  <h2 class="section-title reveal" data-i18n-html="story_title">The flavors we<br><em>never left behind</em></h2>
+  <div class="story-grid" style="grid-template-columns: 1fr;">
+    <div class="story-text reveal">
+      <p>Xuân Sơn Commercial &amp; Services Trading was born from pride — in Vietnamese heritage, in the flavors we grew up with, and in the belief that they deserve a place on shelves far beyond our own communities.</p>
+      <p>Founded by a new generation of Vietnamese professionals, our story is personal. For us, Vietnamese food is more than cuisine. It is memory. It is family gathered around a table, early mornings in Hà Nội, the bold soul of Sài Gòn's street corners, the quiet depth of Central Vietnam's ancient flavors — and the smell of a slow-cooked broth that no recipe could ever fully capture. As first- and second-generation Vietnamese Americans, we carry these moments with us — and we never want to lose them.</p>
+      <p>But life in the United States moves fast. The long hours, the daily rush, the distance between people who were once never far apart. What we miss most is not just the food — it is the time the food used to create. The unhurried mornings. The meals that turned into conversations. The table that always had room for one more.</p>
+      <p style="font-style:italic;font-weight:500;color:var(--ink);">That is what drives everything we do.</p>
+      <p>We work closely with trusted manufacturers and regional artisans across Vietnam to bring authentic, carefully curated products to American homes — from handcrafted fermented pastes to premium ready-to-eat meals, all held to the highest standards of quality, FDA compliance, and thoughtful presentation. Our ready-to-eat line is not about convenience for its own sake. It is about giving families their time back — so the table can be full again, even on a Tuesday night.</p>
+      <p>We are building more than a product line. We are telling a story — of Vietnam's regional diversity, its extraordinary culinary depth, and the people behind every flavor. We are reintroducing Vietnamese food not just as something familiar, but as something the world has been waiting to truly discover.</p>
+      <p style="font-weight:600;letter-spacing:0.05em;margin-top:2rem;color:var(--ink);">Premium. Authentic. Proudly Vietnamese.</p>
+      <div class="story-values">
+        <div class="story-value"><div class="story-value-icon">✦</div><h4>We choose with care</h4><p>Products are selected directly from trusted manufacturers and artisans across Vietnam — no middlemen, no shortcuts.</p></div>
+        <div class="story-value"><div class="story-value-icon">✦</div><h4>Safe for every product</h4><p>Every product meets full FDA compliance and food safety standards, from Vietnam to US shelves.</p></div>
+        <div class="story-value"><div class="story-value-icon">✦</div><h4>Good for the people behind it</h4><p>We partner with small business owners and craftspeople whose work the world deserves to discover.</p></div>
+        <div class="story-value"><div class="story-value-icon">✦</div><h4>The taste should never change</h4><p>Recipes passed down through generations — our job is to make sure they still taste exactly like home.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXCLUSIVE / FEATURED -->
+<section class="section featured" id="featured">
+  <div class="section-label reveal" data-i18n="featured_label">Private Label</div>
+  <h2 class="section-title reveal" data-i18n-html="featured_title">Authentic Vietnamese meals,<br><em>ready in minutes</em></h2>
+  <div class="featured-grid">
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+    <div class="featured-image reveal" style="position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:2px;max-height:420px;">
+      <!-- Featured slideshow -->
+      <div class="feat-slide feat-active" style="position:absolute;inset:0;">
+        <img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774219475/BunMam_gdnh0q.png" alt="Bún Mắm" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="feat-slide" style="position:absolute;inset:0;opacity:0;transition:opacity 0.8s ease;">
+        <img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774219476/BunRieuCua_fxe5w0.png" alt="Bún Riêu Cua" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="feat-slide" style="position:absolute;inset:0;opacity:0;transition:opacity 0.8s ease;">
+        <img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774219328/MiQuang_1_lmk0zn.png" alt="Mì Quảng" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <!-- Dots -->
+      <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:5;">
+        <button onclick="featGoTo(0)" class="feat-dot feat-dot-active" style="width:28px;height:8px;border-radius:10px;background:var(--gold);border:none;cursor:pointer;padding:0;transition:all 0.3s;"></button>
+        <button onclick="featGoTo(1)" class="feat-dot" style="width:10px;height:8px;border-radius:10px;background:rgba(255,255,255,0.4);border:none;cursor:pointer;padding:0;transition:all 0.3s;"></button>
+        <button onclick="featGoTo(2)" class="feat-dot" style="width:10px;height:8px;border-radius:10px;background:rgba(255,255,255,0.4);border:none;cursor:pointer;padding:0;transition:all 0.3s;"></button>
+      </div>
+    </div>
+    <p style="font-size:0.72rem;color:rgba(250,246,240,0.4);font-style:italic;margin-top:0.4rem;" data-i18n="photos_disclaimer">*Photos for illustration only</p>
+    </div>
+    <script>
+    (function() {
+      var slides = document.querySelectorAll('.feat-slide');
+      var dots   = document.querySelectorAll('.feat-dot');
+      var cur    = 0;
+      function featGoTo(n) {
+        slides[cur].style.opacity = '0'; slides[cur].classList.remove('feat-active');
+        dots[cur].style.width = '10px'; dots[cur].style.background = 'rgba(255,255,255,0.4)';
+        cur = n;
+        slides[cur].style.opacity = '1'; slides[cur].classList.add('feat-active');
+        dots[cur].style.width = '28px'; dots[cur].style.background = 'var(--gold)';
+      }
+      window.featGoTo = featGoTo;
+      setInterval(function() { featGoTo((cur + 1) % slides.length); }, 4000);
+    })();
+    </script>
+    <div class="featured-info reveal" style="display:flex;flex-direction:column;justify-content:center;">
+      <p style="font-size:1.05rem;line-height:1.85;color:rgba(250,246,240,0.75);margin-bottom:2.5rem;" data-i18n="featured_desc">The flavors took generations to perfect. The meal takes minutes to prepare. Our frozen ready-to-eat collection is built for Vietnamese families who refuse to let a busy life come between them and the table they grew up around. Private label frozen collection coming soon.</p>
+      <a href="#contact" class="btn btn-gold" style="align-self:flex-start;" data-i18n="featured_btn">Get Notifications <span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section products" id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-label reveal" data-i18n="products_label">Products</div>
+      <h2 class="section-title reveal" data-i18n-html="products_title">The best of Vietnam,<br><em>carefully selected</em></h2>
+    </div>
+    <a href="#" onclick="openCatalog(); return false;" class="btn btn-outline reveal" data-i18n="products_btn">View Full Catalog <span class="btn-arrow">→</span></a>
+  </div>
+  <div class="products-grid">
+    <div class="product-card reveal" onclick="openCatalog('Instant Noodles')" style="cursor:pointer;">
+      <div class="product-card-image"><img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212144/image_023_vntchk.jpg""></div>
+      <div class="product-card-body"><div class="product-card-cat">Instant Noodles</div><div class="product-card-name">Hảo Hảo Hot-Sour Shrimp</div></div>
+      <div class="product-card-tag" data-i18n="tag_popular">Popular</div>
+    </div>
+    <div class="product-card reveal" onclick="openCatalog('Noodles & Pasta')" style="cursor:pointer;">
+      <div class="product-card-image"><img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212137/image_005_a8w6m1.jpg" alt="Safoco Macaroni"></div>
+      <div class="product-card-body"><div class="product-card-cat">Noodles &amp; Pasta</div><div class="product-card-name">Safoco Rice Macaroni</div></div>
+      <div class="product-card-tag" data-i18n="tag_popular">Popular</div>
+    </div>
+    <div class="product-card reveal" onclick="openCatalog('Condiments, Spices & Baking')" style="cursor:pointer;">
+      <div class="product-card-image"><img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212138/image_006_qfg1py.jpg" alt="Cholimex Sa Tế Tôm XO"></div>
+      <div class="product-card-body"><div class="product-card-cat">Condiments &amp; Spices</div><div class="product-card-name">Cholimex Sa Tế Tôm XO</div></div>
+      <div class="product-card-tag" data-i18n="tag_new">New</div>
+    </div>
+    <div class="product-card reveal" onclick="openCatalog('Coffee & Tea')" style="cursor:pointer;">
+      <div class="product-card-image"><img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212138/image_007_ha2a93.jpg" alt="Cộng Cà Phê Cốt Dừa"></div>
+      <div class="product-card-body"><div class="product-card-cat">Coffee &amp; Teas</div><div class="product-card-name">Cộng Cà Phê Cốt Dừa</div></div>
+      <div class="product-card-tag" style="background:var(--gold);" data-i18n="tag_trending">Trending</div>
+    </div>
+    <div class="product-card reveal" onclick="openCatalog('Preserved Goods')" style="cursor:pointer;">
+      <div class="product-card-image"><img src="https://res.cloudinary.com/dqaqvyric/image/upload/v1774212212/MamNemDiCan-M-m-N-m-Thu-c-Bi-t-D-C-n_1_t4llas.jpg" alt="Ultra Premium Fish Sauce"></div>
+      <div class="product-card-body">
+        <div class="product-card-cat">Preserved Goods</div>
+        <div class="product-card-name">Dì Cẩn Special Shrimp Paste</div>
+      </div>
+      <div class="product-card-tag" style="background:var(--gold);" data-i18n="tag_trending">Trending</div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CONTACT -->
+<section class="section contact" id="contact">
+  <div class="section-label reveal" data-i18n="contact_label">Contact Us</div>
+  <h2 class="section-title reveal" data-i18n-html="contact_title">Let's work<br><em>together</em></h2>
+  <div class="contact-grid">
+    <div class="reveal">
+      <div class="contact-info-block"><h4 data-i18n="ci_hq">Headquarters</h4><p data-i18n-html="ci_hq_addr">Xuân Sơn Commercial &amp; Services Trading<br>318/26 Pham Van Hai, Ward Tan Son Nhat,<br>Ho Chi Minh City</p></div>
+      
+      <div class="contact-info-block"><h4 data-i18n="ci_email">Email</h4><p><a href="mailto:sourcing@xuansontrading.com" style="color:inherit;text-decoration:none;">sourcing@xuansontrading.com</a></p></div>
+      
+    </div>
+    <form class="contact-form reveal" id="contactForm" onsubmit="submitContactForm(event)">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your full name" required></div>
+        <div class="form-group"><label>Company</label><input type="text" placeholder="Your company name"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label><input type="email" placeholder="Your email" required></div>
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="+84"></div>
+      </div>
+      <div class="form-group"><label>Inquiry Type</label><select><option>Wholesale Partnership</option><option>Product Sample Request</option><option>Distribution Inquiry</option><option>General Question</option></select></div>
+      <div class="form-group"><label>Message</label><textarea placeholder="Tell us about your business needs..."></textarea></div>
+      <button type="submit" class="btn btn-primary" style="align-self:flex-start;" data-i18n="contact_btn">Send Message <span class="btn-arrow">→</span></button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-brand-name">XUÂN SƠN COMMERCIAL &amp; SERVICES TRADING</div>
+      <p data-i18n="footer_desc">Premium. Authentic. Proudly Vietnamese.</p>
+    </div>
+    <div class="footer-col"><h5>Company</h5><a href="#story">Our Story</a><a href="#">Certifications</a><a href="#">Careers</a><a href="#">Press Kit</a></div>
+    <div class="footer-col"><h5>Products</h5><a href="#products">All Products</a><a href="#featured" data-i18n="nav_exclusive">Private Label</a><a href="#">Private Label</a></div>
+    <div class="footer-col"><h5>Support</h5><a href="#contact">Contact Us</a><a href="#">Shipping Info</a><a href="#">FAQ</a><a href="#">Returns Policy</a></div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer_copy">© 2026 Xuân Sơn Commercial &amp; Services Trading Co., Ltd. All rights reserved.</span>
+    <div class="footer-socials">
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="Instagram">ig</a>
+      <a href="#" title="LinkedIn">in</a>
+      <a href="#" title="YouTube">yt</a>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+window.addEventListener('DOMContentLoaded', () => {
+  var preloader = document.getElementById('preloader');
+  if (preloader) preloader.classList.add('hidden');
+  applyTranslations();
+  productNames = translations[currentLang].slide_names;
+  var heroPN = document.getElementById('heroProductName');
+  if (heroPN) heroPN.textContent = productNames[0];
+});
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
+function toggleMobile() {
+  document.getElementById('hamburger').classList.toggle('active');
+  document.getElementById('mobileNav').classList.toggle('active');
+  document.body.style.overflow = document.getElementById('mobileNav').classList.contains('active') ? 'hidden' : '';
+}
+function closeMobile() {
+  document.getElementById('hamburger').classList.remove('active');
+  document.getElementById('mobileNav').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function submitContactForm(e) {
+  e.preventDefault();
+  const form = document.getElementById('contactForm');
+  const name = form.querySelector('input[type="text"]').value;
+  const company = form.querySelectorAll('input[type="text"]')[1].value;
+  const email = form.querySelector('input[type="email"]').value;
+  const phone = form.querySelector('input[type="tel"]').value;
+  const inquiry = form.querySelector('select').value;
+  const message = form.querySelector('textarea').value;
+  const t = translations[currentLang];
+
+  const subject = encodeURIComponent(inquiry + ' — ' + name + (company ? ' (' + company + ')' : ''));
+  const body = encodeURIComponent(
+    'Name: ' + name + '\n' +
+    'Company: ' + (company || 'N/A') + '\n' +
+    'Email: ' + email + '\n' +
+    'Phone: ' + (phone || 'N/A') + '\n' +
+    'Inquiry Type: ' + inquiry + '\n\n' +
+    'Message:\n' + message
+  );
+
+  window.location.href = 'mailto:sourcing@xuansontrading.com?subject=' + subject + '&body=' + body;
+  alert(t.contact_alert);
+}
+
+// ===== I18N TRANSLATIONS =====
+const translations = {
+  en: {
+    // Nav
+    nav_story: 'Our Story', nav_exclusive: 'Private Label', nav_catalog: 'Catalog',
+    nav_products: 'Products', nav_contact: 'Contact Us', nav_exclusive_full: 'Private Label',
+    // Hero
+    hero_badge: 'What sets us apart',
+    hero_title: '<span style="color:#b85c38;">Vietnam</span> in every jar,<br>every bite, every meal',
+    hero_desc: 'Every product we carry has a story, a region, a tradition, a family that perfected it over generations. We did not just source these from Vietnam. We grew up with them. And now, with the same care and pride, we bring them to the United States — authentic in soul, elevated in quality, and ready to be part of your story too.',
+    hero_btn_products: 'Explore Products', hero_btn_story: 'Our Story',
+    hero_product_label: 'Trending Products',
+    // Marquee
+    m1: 'Beverage', m2: 'Coffee & Tea', m3: 'Condiments, Spices & Baking', m4: 'Cookies, Snacks & Candy',
+    m5: 'Dry Goods', m6: 'Flour & Mixes', m7: 'Noodles & Pasta', m8: 'Instant Noodles', m9: 'Preserved Goods', m10: 'Sauces', m11: 'Non-Food Items',
+    // Story
+    story_label: 'Our Story',
+    story_title: 'The flavors we<br><em>never left behind</em>',
+    story_p1: 'Xuân Sơn Commercial & Services Trading was born from pride — in Vietnamese heritage, in the flavors we grew up with, and in the belief that they deserve a place on shelves far beyond our own communities.',
+    story_p2: 'Founded by a new generation of Vietnamese professionals, our story is personal. For us, Vietnamese food is more than cuisine. It is memory. It is family gathered around a table, early mornings in Hà Nội, the bold soul of Sài Gòn\'s street corners, the quiet depth of Central Vietnam\'s ancient flavors — and the smell of a slow-cooked broth that no recipe could ever fully capture. As first- and second-generation Vietnamese Americans, we carry these moments with us — and we never want to lose them.',
+    story_p4: 'That is what drives everything we do.',
+    story_p5: 'We work closely with trusted manufacturers and regional artisans across Vietnam to bring authentic, carefully curated products to American homes — from handcrafted fermented pastes to premium ready-to-eat meals, all held to the highest standards of quality, FDA compliance, and thoughtful presentation. Our ready-to-eat line is not about convenience for its own sake. It is about giving families their time back — so the table can be full again, even on a Tuesday night.',
+    story_p6: 'We are building more than a product line. We are telling a story — of Vietnam\'s regional diversity, its extraordinary culinary depth, and the people behind every flavor. We are reintroducing Vietnamese food not just as something familiar, but as something the world has been waiting to truly discover.',
+    story_tagline: 'Premium. Authentic. Proudly Vietnamese.',
+    story_p3: 'But life in the United States moves fast. The long hours, the daily rush, the distance between people who were once never far apart. What we miss most is not just the food — it is the time the food used to create. The unhurried mornings. The meals that turned into conversations. The table that always had room for one more.',
+    sv1_h: 'We choose with care', sv1_p: 'Products are selected directly from trusted manufacturers and artisans across Vietnam — no middlemen, no shortcuts.',
+    sv2_h: 'Safe for every product', sv2_p: 'Every product meets full FDA compliance and food safety standards, from Vietnam to US shelves.',
+    sv3_h: 'Good for the people behind it', sv3_p: 'We partner with small business owners and craftspeople whose work the world deserves to discover.',
+    sv4_h: 'The taste should never change', sv4_p: 'Recipes passed down through generations — our job is to make sure they still taste exactly like home.',
+    // Featured
+    featured_label: 'Private Label',
+    featured_title: 'Authentic Vietnamese meals,<br><em>ready in minutes</em>',
+    featured_badge: 'Exclusive',
+    featured_name: 'Phú Quốc Premium Fish Sauce',
+    featured_price: 'Wholesale Pricing Available',
+    featured_desc: 'Authentic Vietnamese noodle dishes made with our premium imported ingredients — Bún Mắm, Bún Riêu Cua, and Mì Quảng. Each dish celebrates the rich, regional flavors of Vietnam.',
+    fd1_l: 'Origin', fd1_v: 'Phú Quốc Island', fd2_l: 'Aging', fd2_v: '12 Months',
+    fd3_l: 'Protein', fd3_v: '40°N', fd4_l: 'Certification', fd4_v: 'FDA / GI',
+    featured_desc: 'The flavors took generations to perfect. The meal takes minutes to prepare. Our frozen ready-to-eat collection is built for Vietnamese families who refuse to let a busy life come between them and the table they grew up around. Private label frozen collection coming soon.',
+    featured_btn: 'Get Notifications',
+    photos_disclaimer: '*Photos for illustration only',
+    // Products
+    products_label: 'Products',
+    products_title: 'The best of Vietnam,<br><em>carefully selected</em>',
+    products_btn: 'View Full Catalog',
+    pc1_cat: 'Noodles & Rice', pc1_name: 'Organic Rice Vermicelli', pc1_desc: 'Traditional stone-ground rice noodles from the Red River Delta.',
+    pc2_cat: 'Wraps & Rolls', pc2_name: 'Rice Paper Wrappers', pc2_desc: 'Thin, translucent rice paper made from premium Tây Ninh rice.',
+    pc3_cat: 'Spices & Herbs', pc3_name: 'Phở Spice Blend', pc3_desc: 'Authentic star anise, cinnamon, and clove blend for traditional phở.',
+    pc4_cat: 'Coconut', pc4_name: 'Virgin Coconut Oil', pc4_desc: 'Cold-pressed from Bến Tre coconuts, rich and fragrant.',
+    tag_popular: 'Popular', tag_new: 'New', tag_trending: 'Trending',
+    // Catalog
+    catalog_label: 'Download Catalog',
+    catalog_title: 'Explore our complete<br><em style="color:#f0e8da;">product range</em>',
+    catalog_desc: 'Over 200 premium Vietnamese food products available for wholesale distribution across the United States. Get our full product catalog with pricing.',
+    catalog_btn: 'Download Catalog (PDF)',
+    // Contact
+    contact_label: 'Contact Us',
+    contact_title: 'Let\'s work<br><em>together</em>',
+    ci_hq: 'Headquarters',
+    ci_hq_addr: 'Xuân Sơn Commercial &amp; Services Trading<br>318/26 Pham Van Hai, Ward Tan Son Nhat,<br>Ho Chi Minh City', ci_vn: '', ci_email: 'Địa chỉ email', ci_phone: '', ci_hours: 'Business Hours',
+    ci_hours_val: 'Monday – Friday: 9:00 AM – 6:00 PM PST<br>Saturday: 10:00 AM – 2:00 PM PST',
+    fl_name: 'Full Name', fl_company: 'Company', fl_email: 'Email', fl_phone: 'Phone',
+    fl_inquiry: 'Inquiry Type', fl_message: 'Message',
+    ph_name: 'Your full name', ph_company: 'Your company name', ph_email: 'Your email', ph_phone: '+84',
+    ph_message: 'Tell us about your business needs...',
+    opt1: 'Wholesale Partnership', opt2: 'Product Sample Request', opt3: 'Distribution Inquiry', opt4: 'General Question',
+    contact_btn: 'Send Message',
+    contact_alert: 'Thank you! We will be in touch shortly.',
+    // Footer
+    fc1: 'Company', fc2: 'Products', fc3: 'Support',
+    fc1_1: 'Our Story', fc1_2: 'Certifications', fc1_3: 'Careers', fc1_4: 'Press Kit',
+    fc2_1: 'All Products', fc2_2: 'Exclusive', fc2_3: 'Full Catalog', fc2_4: 'Private Label',
+    fc3_1: 'Contact Us', fc3_2: 'Shipping Info', fc3_3: 'FAQ', fc3_4: 'Returns Policy',
+    footer_desc: 'Premium. Authentic. Proudly Vietnamese.',
+    footer_copy: '© 2026 Xuân Sơn Commercial &amp; Services Trading Co., Ltd. All rights reserved.',
+    // Slide names
+    slide_names: ['Phê La Milk Tea Kit', 'Cộng Salted Cream Coffee', 'Sa Giang Shrimp Chips']
+  },
+  vi: {
+    // Nav
+    nav_story: 'Câu chuyện của chúng tôi', nav_exclusive: 'Nhãn hiệu riêng', nav_catalog: 'Danh mục',
+    nav_products: 'Sản phẩm', nav_contact: 'Liên hệ', nav_exclusive_full: 'Nhãn Riêng',
+    // Hero
+    hero_badge: 'Điều tạo nên sự khác biệt',
+    hero_title: '<span style="color:#b85c38;">Hương vị Việt</span><span style="color:#b85c38;">,</span><br>trọn vẹn trong từng bữa ăn',
+    hero_desc: 'Mỗi sản phẩm chúng tôi mang đến đều chứa đựng một câu chuyện, một vùng đất, một truyền thống, một gia đình đã dày công gìn giữ và hoàn thiện qua bao thế hệ. Chúng tôi không đơn giản là đi tìm nguồn hàng từ Việt Nam. Chúng tôi lớn lên cùng những hương vị đó. Và giờ đây, với tất cả tâm huyết và niềm tự hào, chúng tôi đưa chúng đến Hoa Kỳ — nguyên vẹn trong tâm hồn, tinh tế trong chất lượng, và sẵn sàng trở thành một phần trong câu chuyện của gia đình bạn.',
+    hero_btn_products: 'Khám phá sản phẩm', hero_btn_story: 'Câu chuyện của chúng tôi',
+    hero_product_label: 'Sản phẩm nổi bật',
+    // Marquee
+    m1: 'Nước mắm cao cấp', m2: 'Bún gạo hữu cơ', m3: 'Sản phẩm từ dừa', m4: 'Gia vị thủ công',
+    m5: 'Trái cây nhiệt đới', m6: 'Nước sốt đặc biệt', m7: 'Hải sản khô', m8: 'Cà phê truyền thống',
+    // Story
+    story_label: 'Câu chuyện của chúng tôi',
+    story_title: 'Những hương vị<br><em>chúng tôi chưa bao giờ quên</em>',
+    story_p1: 'Xuân Sơn Commercial & Services Trading được sinh ra từ niềm tự hào — tự hào về văn hóa Việt, về những hương vị đã nuôi lớn chúng tôi, và về niềm tin rằng ẩm thực Việt Nam xứng đáng được biết đến rộng rãi hơn, vượt ra ngoài cộng đồng của chính mình.',
+    story_p2: 'Được sáng lập bởi thế hệ người Việt trẻ, câu chuyện của chúng tôi rất đỗi gần gũi. Với chúng tôi, món ăn Việt không chỉ là thức ăn — đó là ký ức. Là những buổi sáng tinh mơ ở Hà Nội bên tách trà còn bốc khói, là góc phố Sài Gòn tấp nập mà thân quen, là vị đậm đà của miền Trung nắng gió và là mùi của nồi nước dùng ninh cả đêm mà không một công thức nào có thể diễn tả hết. Là những người con Việt đang sống và làm việc trên đất Mỹ, chúng tôi mang theo tất cả những điều đó và không muốn để chúng phai nhạt theo năm tháng.',
+    story_p3: 'Nhưng cuộc sống ở Mỹ vốn không chậm lại chờ ai. Công việc bận rộn, guồng quay hối hả, và những khoảng cách cứ lớn dần giữa những người từng chưa bao giờ xa nhau. Điều chúng tôi nhớ không chỉ là món ăn — mà là thời gian mà những bữa ăn đó từng tạo ra. Những buổi sáng thong thả. Những bữa cơm kéo dài thành câu chuyện. Cái bàn ăn mà hôm nào cũng đủ mặt mọi người.',
+    story_p4: 'Đó là điều thôi thúc chúng tôi làm tất cả những gì đang làm.',
+    story_p5: 'Chúng tôi hợp tác chặt chẽ với các nhà sản xuất uy tín và những nghệ nhân ẩm thực khắp ba miền để mang đến những sản phẩm chất lượng, giàu bản sắc cho các gia đình Việt tại Mỹ — từ các loại mắm, tương truyền thống được chế biến thủ công, đến các món ăn liền cao cấp, tất cả đều đạt tiêu chuẩn FDA và được chọn lọc kỹ lưỡng. Dòng sản phẩm ăn liền của chúng tôi không đơn thuần là để cho tiện — mà là để trả lại thời gian cho những gia đình bận rộn, để bữa cơm sum họp không còn là điều xa xỉ, dù chỉ là một tối thứ Ba bình thường.',
+    story_p6: 'Chúng tôi đang xây dựng nhiều hơn một thương hiệu thực phẩm. Chúng tôi đang kể một câu chuyện về sự đa dạng vùng miền của Việt Nam, về chiều sâu ẩm thực mà cả thế giới chưa thực sự khám phá hết, và về những con người đứng sau mỗi hương vị. Chúng tôi muốn đưa ẩm thực Việt trở lại đúng vị trí của nó — không chỉ là quen thuộc, mà là xứng tầm.',
+    story_tagline: 'Cao cấp. Nguyên bản. Chuẩn Việt.',
+    sv1_h: 'Chọn lọc có tâm', sv1_p: 'Sản phẩm được tuyển chọn trực tiếp từ các nhà sản xuất và nghệ nhân uy tín khắp Việt Nam — không trung gian, không đường tắt.',
+    sv2_h: 'An toàn cho từng sản phẩm', sv2_p: 'Mọi sản phẩm đều đạt tiêu chuẩn FDA đầy đủ và các quy định an toàn thực phẩm, từ Việt Nam đến kệ hàng tại Mỹ.',
+    sv3_h: 'Tốt cho những người đứng sau', sv3_p: 'Chúng tôi hợp tác với các chủ doanh nghiệp nhỏ và nghệ nhân thủ công — những người mà tài năng của họ xứng đáng được cả thế giới biết đến.',
+    sv4_h: 'Hương vị không được thay đổi', sv4_p: 'Những công thức được truyền lại qua nhiều thế hệ — việc của chúng tôi là đảm bảo chúng vẫn giữ nguyên hương vị như ở nhà.',
+    // Featured
+    featured_label: 'Nhãn Hiệu Riêng',
+    featured_title: 'Món ăn chuẩn Việt,<br><em>sẵn sàng trong vài phút</em>',
+    featured_badge: 'Độc quyền',
+    featured_desc: 'Hương vị ấy mất cả một đời để gìn giữ. Bữa ăn chỉ cần vài phút để dọn ra. Dòng sản phẩm ăn liền của chúng tôi ra đời cho những gia đình Việt không muốn để guồng quay bận rộn lấy đi những bữa cơm đã từng là điều hiển nhiên nhất trong cuộc sống. Cùng chờ đón bộ sưu tập hàng đông lạnh nhãn hiệu riêng sắp ra mắt.',
+    featured_btn: 'Nhận thông báo',
+    photos_disclaimer: 'Hình ảnh mang tính chất minh họa',
+    // Products
+    products_label: 'Sản phẩm',
+    products_title: 'Tinh hoa Việt Nam,<br><em>được chọn lọc kỹ lưỡng</em>',
+    products_btn: 'Xem toàn bộ danh mục',
+    tag_popular: 'Phổ biến', tag_new: 'Hàng mới', tag_trending: 'Thịnh hành',
+    // Contact
+    contact_label: 'Liên hệ',
+    contact_title: 'Liên hệ<br><em>hợp tác</em>',
+    ci_hq: 'Trụ sở chính',
+    ci_hq_addr: 'Công ty TNHH Kinh Doanh Thương Mại và Dịch Vụ Xuân Sơn<br>318/26 Phạm Văn Hai, Phường Tân Sơn Nhất,<br>Thành phố Hồ Chí Minh', ci_vn: '', ci_email: 'Địa chỉ email', ci_phone: '', ci_hours: 'Giờ làm việc',
+    ci_hours_val: 'Thứ Hai – Thứ Sáu: 9:00 SA – 6:00 CH<br>Thứ Bảy: 10:00 SA – 2:00 CH',
+    fl_name: 'Họ và tên', fl_company: 'Công ty', fl_email: 'Email', fl_phone: 'Điện thoại',
+    fl_inquiry: 'Loại yêu cầu', fl_message: 'Nội dung',
+    ph_name: 'Họ và tên đầy đủ của bạn', ph_company: 'Tên công ty của bạn', ph_email: 'Email của bạn', ph_phone: '+84',
+    ph_message: 'Hãy cho chúng tôi biết nhu cầu của bạn...',
+    opt1: 'Hợp tác phân phối sỉ', opt2: 'Yêu cầu mẫu sản phẩm', opt3: 'Hỏi về phân phối', opt4: 'Câu hỏi chung',
+    contact_btn: 'Gửi tin nhắn',
+    contact_alert: 'Cảm ơn bạn! Chúng tôi sẽ liên hệ lại sớm.',
+    // Footer
+    fc1: 'Công ty', fc2: 'Sản phẩm', fc3: 'Hỗ trợ',
+    fc1_1: 'Câu chuyện', fc1_2: 'Chứng nhận', fc1_3: 'Tuyển dụng', fc1_4: 'Bộ nhận diện',
+    fc2_1: 'Tất cả sản phẩm', fc2_2: 'Độc quyền', fc2_3: 'Danh mục đầy đủ', fc2_4: 'Nhãn hiệu riêng',
+    fc3_1: 'Liên hệ', fc3_2: 'Thông tin vận chuyển', fc3_3: 'Câu hỏi thường gặp', fc3_4: 'Chính sách đổi trả',
+    footer_desc: 'Cao cấp. Nguyên bản. Chuẩn Việt.',
+    footer_copy: '© 2026 Công ty TNHH Thương mại & Dịch vụ Xuân Sơn. Bảo lưu mọi quyền.',
+    // Slide names
+    slide_names: ['Bộ Trà Sữa Phê La', 'Cộng Cà Phê Kem Sữa', 'Bánh Phồng Tôm Sa Giang']
+  }
+};
+let currentLang = 'en';
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'vi' : 'en';
+  // Update active indicator on all lang toggles (desktop + mobile)
+  document.querySelectorAll('.lang-en').forEach(el => {
+    el.classList.toggle('lang-active', currentLang === 'en');
+  });
+  document.querySelectorAll('.lang-vi').forEach(el => {
+    el.classList.toggle('lang-active', currentLang === 'vi');
+  });
+  applyTranslations();
+  // Re-run catalog if open
+  var overlay = document.getElementById('catalogOverlay');
+  if (overlay && overlay.classList.contains('active')) {
+    var active = document.querySelector('.catalog-sidebar-item.active');
+    if (active) showCatalogCategory(active.textContent.trim());
+  }
+  // Update product names in slideshow
+  productNames = translations[currentLang].slide_names;
+  if (document.getElementById('heroProductName')) {
+    document.getElementById('heroProductName').textContent = productNames[currentSlide];
+  }
+}
+
+function applyTranslations() {
+  const t = translations[currentLang];
+  // Text content
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) {
+      // Preserve arrow spans inside buttons/links
+      const arrow = el.querySelector('.btn-arrow');
+      el.textContent = t[key];
+      if (arrow) { el.textContent = t[key] + ' '; el.appendChild(arrow); }
+    }
+  });
+  // HTML content (titles with <br> and <em>)
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // Story paragraphs
+  const storyPs = document.querySelectorAll('.story-text > p');
+  if (storyPs[0] && t.story_p1) storyPs[0].textContent = t.story_p1;
+  if (storyPs[1] && t.story_p2) storyPs[1].textContent = t.story_p2;
+  if (storyPs[2] && t.story_p3) storyPs[2].textContent = t.story_p3;
+  if (storyPs[3] && t.story_p4) storyPs[3].textContent = t.story_p4;
+  if (storyPs[4] && t.story_p5) storyPs[4].textContent = t.story_p5;
+  if (storyPs[5] && t.story_p6) storyPs[5].textContent = t.story_p6;
+  if (storyPs[6] && t.story_tagline) storyPs[6].textContent = t.story_tagline;
+  // Story values
+  const svH = document.querySelectorAll('.story-value h4');
+  const svP = document.querySelectorAll('.story-value p');
+  if (svH[0]) { svH[0].textContent = t.sv1_h; svP[0].textContent = t.sv1_p; }
+  if (svH[1]) { svH[1].textContent = t.sv2_h; svP[1].textContent = t.sv2_p; }
+  if (svH[2]) { svH[2].textContent = t.sv3_h; svP[2].textContent = t.sv3_p; }
+  if (svH[3]) { svH[3].textContent = t.sv4_h; svP[3].textContent = t.sv4_p; }
+  // Featured details
+  const fdL = document.querySelectorAll('.featured-detail-label');
+  const fdV = document.querySelectorAll('.featured-detail-value');
+  if (fdL[0]) { fdL[0].textContent = t.fd1_l; fdV[0].textContent = t.fd1_v; }
+  if (fdL[1]) { fdL[1].textContent = t.fd2_l; fdV[1].textContent = t.fd2_v; }
+  if (fdL[2]) { fdL[2].textContent = t.fd3_l; fdV[2].textContent = t.fd3_v; }
+  if (fdL[3]) { fdL[3].textContent = t.fd4_l; fdV[3].textContent = t.fd4_v; }
+  // Featured h3
+  const fh3 = document.querySelector('.featured-info h3');
+  if (fh3) fh3.textContent = t.featured_name;
+  // Featured description
+  const fdesc = document.querySelector('.featured-info > p');
+  if (fdesc) fdesc.textContent = t.featured_desc;
+  // Product cards - bilingual
+  const pcData = {
+    en: [
+      {cat:'Instant Noodles', name:'Hảo Hảo Hot-Sour Shrimp'},
+      {cat:'Noodles & Pasta', name:'Safoco Rice Macaroni'},
+      {cat:'Condiments & Spices', name:'Cholimex Shrimp Satay XO'},
+      {cat:'Coffee & Tea', name:'Cộng Coconut Coffee'},
+      {cat:'Preserved Goods', name:'Dì Cẩn Special Shrimp Paste'}
+    ],
+    vi: [
+      {cat:'Mì Ăn Liền', name:'Hảo Hảo Tôm Chua Cay'},
+      {cat:'Bún & Mì', name:'Safoco Bún Gạo Macaroni'},
+      {cat:'Gia Vị & Sốt', name:'Cholimex Sa Tế Tôm XO'},
+      {cat:'Cà Phê & Trà', name:'Cộng Cà Phê Cốt Dừa'},
+      {cat:'Hàng Khô & Đặc Sản', name:'Mắm Ruốc Đặc Biệt Dì Cẩn'}
+    ]
+  };
+  const pcLang = pcData[currentLang] || pcData.en;
+  const cats = document.querySelectorAll('.product-card-cat');
+  const names = document.querySelectorAll('.product-card-name');
+  pcLang.forEach(function(item, i) {
+    if (cats[i]) cats[i].textContent = item.cat;
+    if (names[i]) names[i].textContent = item.name;
+  });
+  // Product tags
+  const tags = document.querySelectorAll('.product-card-tag');
+  if (tags[0]) tags[0].textContent = t.tag_popular;
+  if (tags[1]) tags[1].textContent = t.tag_new;
+  // Contact info headings
+  const ciH = document.querySelectorAll('.contact-info-block h4');
+  if (ciH[0]) ciH[0].textContent = t.ci_hq;
+  if (ciH[1]) ciH[1].textContent = t.ci_vn;
+  if (ciH[2]) ciH[2].textContent = t.ci_email;
+  if (ciH[3]) ciH[3].textContent = t.ci_phone;
+  if (ciH[4]) { ciH[4].textContent = t.ci_hours; ciH[4].nextElementSibling.innerHTML = t.ci_hours_val; }
+  // Form labels
+  const labels = document.querySelectorAll('.form-group label');
+  if (labels[0]) labels[0].textContent = t.fl_name;
+  if (labels[1]) labels[1].textContent = t.fl_company;
+  if (labels[2]) labels[2].textContent = t.fl_email;
+  if (labels[3]) labels[3].textContent = t.fl_phone;
+  if (labels[4]) labels[4].textContent = t.fl_inquiry;
+  if (labels[5]) labels[5].textContent = t.fl_message;
+  // Form placeholders
+  const inputs = document.querySelectorAll('.form-group input');
+  if (inputs[0]) inputs[0].placeholder = t.ph_name;
+  if (inputs[1]) inputs[1].placeholder = t.ph_company;
+  if (inputs[2]) inputs[2].placeholder = t.ph_email;
+  if (inputs[3]) inputs[3].placeholder = t.ph_phone;
+  const ta = document.querySelector('.form-group textarea');
+  if (ta) ta.placeholder = t.ph_message;
+  // Select options
+  const opts = document.querySelectorAll('.form-group select option');
+  if (opts[0]) opts[0].textContent = t.opt1;
+  if (opts[1]) opts[1].textContent = t.opt2;
+  if (opts[2]) opts[2].textContent = t.opt3;
+  if (opts[3]) opts[3].textContent = t.opt4;
+  // Footer columns
+  const fcolH = document.querySelectorAll('.footer-col h5');
+  if (fcolH[0]) fcolH[0].textContent = t.fc1;
+  if (fcolH[1]) fcolH[1].textContent = t.fc2;
+  if (fcolH[2]) fcolH[2].textContent = t.fc3;
+  const fcols = document.querySelectorAll('.footer-col');
+  if (fcols[0]) { const a = fcols[0].querySelectorAll('a'); a[0].textContent=t.fc1_1; a[1].textContent=t.fc1_2; a[2].textContent=t.fc1_3; a[3].textContent=t.fc1_4; }
+  if (fcols[1]) { const a = fcols[1].querySelectorAll('a'); a[0].textContent=t.fc2_1; a[1].textContent=t.fc2_2; a[2].textContent=t.fc2_3; a[3].textContent=t.fc2_4; }
+  if (fcols[2]) { const a = fcols[2].querySelectorAll('a'); a[0].textContent=t.fc3_1; a[1].textContent=t.fc3_2; a[2].textContent=t.fc3_3; a[3].textContent=t.fc3_4; }
+  // Update marquee items
+  var marqueeItems = document.querySelectorAll('.marquee-item');
+  var mKeys = ['m1','m2','m3','m4','m5','m6','m7','m8'];
+  marqueeItems.forEach(function(el, i) {
+    var key = mKeys[i % mKeys.length];
+    if (t[key]) { el.childNodes[0].textContent = t[key] + ' '; }
+  });
+  // Update slide names and current slide
+  productNames = t.slide_names;
+  productName.textContent = productNames[currentSlide];
+  // Lang toggle highlight
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('lang-active', currentLang === 'en'));
+  document.querySelectorAll('.lang-vi').forEach(el => el.classList.toggle('lang-active', currentLang === 'vi'));
+}
+
+// Scroll reveal
+const revealElements = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revealElements.forEach(el => revealObserver.observe(el));
+
+// Hero Slideshow
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.hero-dot');
+const productName = document.getElementById('heroProductName');
+let productNames = translations[currentLang].slide_names;
+let currentSlide = 0;
+let slideInterval;
+
+function goToSlide(index) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = index;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+  productName.style.opacity = '0';
+  setTimeout(() => {
+    productName.textContent = productNames[currentSlide];
+    productName.style.opacity = '1';
+  }, 300);
+  resetInterval();
+}
+
+function nextSlide() {
+  goToSlide((currentSlide + 1) % slides.length);
+}
+
+function resetInterval() {
+  clearInterval(slideInterval);
+  slideInterval = setInterval(nextSlide, 4500);
+}
+
+function startSlideshow() {
+  slideInterval = setInterval(nextSlide, 4500);
+}
+
+startSlideshow();
+// Ensure title matches first slide on load
+if (productName) productName.textContent = productNames[0];
+
+
+
+// ===== CATALOG OVERLAY =====
+const catalogProducts = [{"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212138/image_009_jboklw.jpg", "name": "Hảo Hảo BIG 100g", "flavor": "Hot-Sour Shrimp", "cat": "Instant Noodles", "name_vi": "Hảo Hảo BIG 100g", "name_en": "Hảo Hảo BIG 100g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212138/image_010_lgrvtf.jpg", "name": "Mini Handy Hảo Hảo Bò Sa Tế", "flavor": "Beef Satay", "cat": "Instant Noodles", "name_vi": "Mini Handy Hảo Hảo Bò Sa Tế", "name_en": "Mini Handy Hảo Hảo Beef Satay"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212138/image_011_pp0zpv.jpg", "name": "Mì Tô Trộn Handy Hảo Hảo", "flavor": "Hot-Sour Shrimp", "cat": "Instant Noodles", "name_vi": "Mì Tô Trộn Handy Hảo Hảo", "name_en": "Handy Hảo Hảo Stir Noodle Bowl"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212139/image_012_b6lcw5.jpg", "name": "Handy Hảo Hảo TomYum", "flavor": "Tom Yum", "cat": "Instant Noodles", "name_vi": "Handy Hảo Hảo TomYum", "name_en": "Handy Hảo Hảo Tom Yum"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212139/image_013_q4j5hv.jpg", "name": "Hảo Hảo Lẩu Kim Chi Hàn Quốc", "flavor": "Korean Kimchi Hotpot", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Lẩu Kim Chi Hàn Quốc", "name_en": "Hảo Hảo Korean Kimchi Hot Pot"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212139/image_014_g4qnlh.jpg", "name": "Hảo Hảo Mì Chay Rau Nấm", "flavor": "Mushroom & Vegetable", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Mì Chay Rau Nấm", "name_en": "Hảo Hảo Vegetarian Mushroom"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212140/image_015_by1ghy.jpg", "name": "Hảo Hảo Mì Gà Vàng", "flavor": "Yellow Chicken", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Mì Gà Vàng", "name_en": "Hảo Hảo Golden Chicken"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212143/image_016_gzltd4.jpg", "name": "Hảo Hảo Mì Vắt Plain Noodles", "flavor": "Plain Noodle Only", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Mì Vắt Plain Noodles", "name_en": "Hảo Hảo Plain Noodle Block"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212143/image_017_usptqn.jpg", "name": "Hảo Hảo Mì Xào Hải Sản", "flavor": "Seafood Stir-Fry", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Mì Xào Hải Sản", "name_en": "Hảo Hảo Seafood Stir-Fry"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212143/image_018_lbzqyj.jpg", "name": "Muối Chấm Hảo Hảo", "flavor": "Tôm Chua Cay Dipping Salt", "cat": "Condiments, Spices & Baking", "name_vi": "Muối Chấm Hảo Hảo", "name_en": "Hảo Hảo Dipping Salt"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212143/image_019_pm9vzk.jpg", "name": "Hảo Hảo Premium Tôm Chua Cay", "flavor": "Hot-Sour Shrimp Premium", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Premium Tôm Chua Cay", "name_en": "Hảo Hảo Premium Hot-Sour Shrimp"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212143/image_020_qzlvjp.jpg", "name": "Hảo Hảo Sa Tế Hành Tím", "flavor": "Satay Onion", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Sa Tế Hành Tím", "name_en": "Hảo Hảo Satay Shallot"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212144/image_021_gakdw0.jpg", "name": "Hảo Hảo Sườn Heo Tỏi Phi", "flavor": "Spareribs with Fried Garlic", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Sườn Heo Tỏi Phi", "name_en": "Hảo Hảo Spareribs Fried Garlic"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212144/image_023_vntchk.jpg", "name": "Hảo Hảo Tôm Chua Cay 75g", "flavor": "Hot-Sour Shrimp", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Tôm Chua Cay 75g", "name_en": "Hảo Hảo Hot-Sour Shrimp 75g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212144/image_023_vntchk.jpg", "name": "Hảo Hảo Tôm Chua Cay", "flavor": "Hot-Sour Shrimp Classic", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Tôm Chua Cay", "name_en": "Hảo Hảo Hot-Sour Shrimp"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212144/image_024_wtliei.jpg", "name": "Hảo Hảo Mì Xào Tôm Xào Chua Ngọt", "flavor": "Sweet & Sour Shrimp", "cat": "Instant Noodles", "name_vi": "Hảo Hảo Mì Xào Tôm Xào Chua Ngọt", "name_en": "Hảo Hảo Sweet & Sour Shrimp Stir-Fry"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212144/image_025_hq7mbt.jpg", "name": "Mì Lẩu Thái Hương Vị Tôm", "flavor": "Thai Shrimp Hotpot", "cat": "Instant Noodles", "name_vi": "Mì Lẩu Thái Hương Vị Tôm", "name_en": "Thai Hot Pot Shrimp Noodles"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212144/image_026_otmj7h.jpg", "name": "Modern Mì Ly Gà Ớt Hiểm", "flavor": "Fiery Chili Chicken", "cat": "Instant Noodles", "name_vi": "Modern Mì Ly Gà Ớt Hiểm", "name_en": "Modern Cup Fiery Chili Chicken"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212147/image_027_chxkr9.jpg", "name": "Modern Mì Ly Lẩu Thái Tôm", "flavor": "Thai Shrimp Hotpot", "cat": "Instant Noodles", "name_vi": "Modern Mì Ly Lẩu Thái Tôm", "name_en": "Modern Cup Thai Shrimp Hot Pot"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212148/image_028_xvil4y.jpg", "name": "Modern Xtreme Hương Vị Bò", "flavor": "Beef Spicy", "cat": "Instant Noodles", "name_vi": "Modern Xtreme Hương Vị Bò", "name_en": "Modern Xtreme Spicy Beef"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212148/image_029_dklli7.jpg", "name": "Modern Xtreme Kim Chi Bùng Cay", "flavor": "Spicy Kimchi", "cat": "Instant Noodles", "name_vi": "Modern Xtreme Kim Chi Bùng Cay", "name_en": "Modern Xtreme Spicy Kimchi"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212148/image_030_mpefda.jpg", "name": "Miến Phú Hương Yến Tiệc", "flavor": "Dry Glass Noodles 210g", "cat": "Noodles & Pasta", "name_vi": "Miến Phú Hương Yến Tiệc", "name_en": "Phú Hương Glass Noodles Party Pack"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212148/image_031_fjezfi.jpg", "name": "Miến Phú Hương Hương Vị Gà", "flavor": "Chicken Flavour", "cat": "Noodles & Pasta", "name_vi": "Miến Phú Hương Hương Vị Gà", "name_en": "Phú Hương Glass Noodles Chicken"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212148/image_032_jsheci.jpg", "name": "Miến Phú Hương Lẩu Thái Tôm", "flavor": "Thai Shrimp Hotpot", "cat": "Noodles & Pasta", "name_vi": "Miến Phú Hương Lẩu Thái Tôm", "name_en": "Phú Hương Glass Noodles Thai Shrimp"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212149/image_033_thlcoe.jpg", "name": "Miến Phú Hương Trộn Gà Xào Chua Ngọt", "flavor": "Sweet & Sour Stir-Fried Chicken", "cat": "Noodles & Pasta", "name_vi": "Miến Phú Hương Trộn Gà Xào Chua Ngọt", "name_en": "Phú Hương Glass Noodles Sweet & Sour Chicken"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212149/image_034_orl3jf.jpg", "name": "Miến Phú Hương Sườn Heo", "flavor": "Spareribs Flavour", "cat": "Noodles & Pasta", "name_vi": "Miến Phú Hương Sườn Heo", "name_en": "Phú Hương Glass Noodles Spareribs"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212149/image_035_v95npc.jpg", "name": "Miến Phú Hương Thịt Bằm", "flavor": "Minced Meat Flavour", "cat": "Noodles & Pasta", "name_vi": "Miến Phú Hương Thịt Bằm", "name_en": "Phú Hương Glass Noodles Minced Meat"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212149/image_036_k7tj2o.jpg", "name": "Mì SiuKay Hương Vị Bò", "flavor": "Spicy Beef", "cat": "Instant Noodles", "name_vi": "Mì SiuKay Hương Vị Bò", "name_en": "SiuKay Spicy Beef"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212149/image_037_dp9lfa.jpg", "name": "Mì SiuKay Gà Xốt Phô Mai Ghost Pepper", "flavor": "Chicken Cheese Ghost Pepper", "cat": "Instant Noodles", "name_vi": "Mì SiuKay Gà Xốt Phô Mai Ghost Pepper", "name_en": "SiuKay Chicken Cheese Ghost Pepper"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212151/image_038_f28vxq.jpg", "name": "Mì SiuKay Hương Vị Hải Sản", "flavor": "Spicy Seafood", "cat": "Instant Noodles", "name_vi": "Mì SiuKay Hương Vị Hải Sản", "name_en": "SiuKay Spicy Seafood"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212151/image_039_quqtz9.jpg", "name": "Cholimex Tương Cà (Packet)", "flavor": "Tomato Sauce", "cat": "Sauces", "name_vi": "Cholimex Tương Cà (Packet)", "name_en": "Cholimex Tomato Sauce (Packet)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212151/image_040_xfcgwo.jpg", "name": "Cholimex Xốt Lẩu Chua Hải Sản", "flavor": "Sour Soup for Seafood", "cat": "Sauces", "name_vi": "Cholimex Xốt Lẩu Chua Hải Sản", "name_en": "Cholimex Sour Seafood Hot Pot Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212151/image_041_d2uc6r.jpg", "name": "Cholimex Xốt Gà Chiên Nước Mắm 90g", "flavor": "Fish Sauce Glazed Chicken", "cat": "Sauces", "name_vi": "Cholimex Xốt Gà Chiên Nước Mắm 90g", "name_en": "Cholimex Fish Sauce Glazed Chicken 90g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212151/image_042_u9c1mz.jpg", "name": "Cholimex Xốt Sườn Xào Chua Ngọt", "flavor": "Sweet & Sour Ribs", "cat": "Sauces", "name_vi": "Cholimex Xốt Sườn Xào Chua Ngọt", "name_en": "Cholimex Sweet & Sour Ribs Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212152/image_043_cw1enp.jpg", "name": "Cholimex Nước Tương Đậu Nành 300ml", "flavor": "Soy Sauce 300ml", "cat": "Sauces", "name_vi": "Cholimex Nước Tương Đậu Nành 300ml", "name_en": "Cholimex Soy Sauce 300ml"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212152/image_044_ggkwr2.jpg", "name": "Cholimex Nước Tương Đậu Nành 700ml", "flavor": "Soy Sauce 700ml", "cat": "Sauces", "name_vi": "Cholimex Nước Tương Đậu Nành 700ml", "name_en": "Cholimex Soy Sauce 700ml"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212154/image_045_ovua2a.jpg", "name": "Cholimex Ớt Khô Sa Tế", "flavor": "Dried Satay Chili", "cat": "Condiments, Spices & Baking", "name_vi": "Cholimex Ớt Khô Sa Tế", "name_en": "Cholimex Dried Satay Chili"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212156/image_046_q5xziz.jpg", "name": "Cholimex Ớt Sa Tế", "flavor": "Satay Chili", "cat": "Condiments, Spices & Baking", "name_vi": "Cholimex Ớt Sa Tế", "name_en": "Cholimex Satay Chili"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212156/image_047_acwrp0.jpg", "name": "Cholimex Sa Tế Nướng Ngũ Vị", "flavor": "BBQ Five-Spice Satay", "cat": "Sauces", "name_vi": "Cholimex Sa Tế Nướng Ngũ Vị", "name_en": "Cholimex Five-Spice BBQ Satay"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212157/image_048_ptfq7a.jpg", "name": "Cholimex Saté Chay", "flavor": "Vegetarian Satay", "cat": "Sauces", "name_vi": "Cholimex Saté Chay", "name_en": "Cholimex Vegetarian Satay"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212157/image_049_ho9ikr.jpg", "name": "Cholimex Saté Tôm 90g", "flavor": "Shrimp Satay 90g", "cat": "Sauces", "name_vi": "Cholimex Saté Tôm 90g", "name_en": "Cholimex Shrimp Satay 90g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212157/image_050_aqghkt.jpg", "name": "Cholimex Saté Tôm 450g", "flavor": "Shrimp Satay 450g", "cat": "Sauces", "name_vi": "Cholimex Saté Tôm 450g", "name_en": "Cholimex Shrimp Satay 450g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212157/image_051_xdekjr.jpg", "name": "Cholimex Tương Cà 270ml", "flavor": "Tomato Sauce 270ml", "cat": "Sauces", "name_vi": "Cholimex Tương Cà 270ml", "name_en": "Cholimex Tomato Sauce 270ml"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212157/image_052_vu4ifk.jpg", "name": "Cholimex Tương Đen Phở 520g", "flavor": "Pickled Soy Bean for Phở", "cat": "Sauces", "name_vi": "Cholimex Tương Đen Phở 520g", "name_en": "Cholimex Dark Sauce for Phở 520g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212158/image_053_uaigsz.jpg", "name": "Cholimex Tương Ớt Chua Ngọt", "flavor": "Sweet & Sour Chili Sauce", "cat": "Sauces", "name_vi": "Cholimex Tương Ớt Chua Ngọt", "name_en": "Cholimex Sweet & Sour Chili Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212160/image_054_nlrtbz.jpg", "name": "Cholimex Tương Ớt Gừng", "flavor": "Ginger Chili Sauce", "cat": "Sauces", "name_vi": "Cholimex Tương Ớt Gừng", "name_en": "Cholimex Ginger Chili Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212160/image_055_scxind.jpg", "name": "Cholimex Tương Đen Phở 230g", "flavor": "Pickled Soy Bean for Phở 230g", "cat": "Sauces", "name_vi": "Cholimex Tương Đen Phở 230g", "name_en": "Cholimex Dark Sauce for Phở 230g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212160/image_056_wil5hq.jpg", "name": "Cholimex Tương Ớt Siêu Cay", "flavor": "Superhot Chili Sauce", "cat": "Sauces", "name_vi": "Cholimex Tương Ớt Siêu Cay", "name_en": "Cholimex Super Hot Chili Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212161/image_057_kwvqib.jpg", "name": "Cholimex Tương Ớt Sriracha 520g", "flavor": "Sriracha Chili Sauce", "cat": "Sauces", "name_vi": "Cholimex Tương Ớt Sriracha 520g", "name_en": "Cholimex Sriracha Chili Sauce 520g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212161/image_058_urvkpp.jpg", "name": "Cholimex Tương Ớt Xí Muội", "flavor": "Plum Chili Sauce", "cat": "Sauces", "name_vi": "Cholimex Tương Ớt Xí Muội", "name_en": "Cholimex Plum Chili Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212161/image_059_eaulmi.jpg", "name": "Cholimex Xốt Mì Ý Bò Bằm", "flavor": "Bolognaise Spaghetti Sauce", "cat": "Sauces", "name_vi": "Cholimex Xốt Mì Ý Bò Bằm", "name_en": "Cholimex Bolognese Spaghetti Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212161/image_060_u0md6r.jpg", "name": "Cholimex Xốt Mì Ý Cà Chua", "flavor": "Napolitan Spaghetti Sauce", "cat": "Sauces", "name_vi": "Cholimex Xốt Mì Ý Cà Chua", "name_en": "Cholimex Napolitana Spaghetti Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212161/image_061_fr1jg4.jpg", "name": "Cholimex Xốt Tiêu Đen", "flavor": "Black Pepper Sauce", "cat": "Sauces", "name_vi": "Cholimex Xốt Tiêu Đen", "name_en": "Cholimex Black Pepper Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212161/image_062_wvfgok.jpg", "name": "Cholimex Tương Ớt Chua Ngọt (Large)", "flavor": "Sweet & Sour Chili Sauce Large", "cat": "Sauces", "name_vi": "Cholimex Tương Ớt Chua Ngọt (Large)", "name_en": "Cholimex Sweet & Sour Chili Sauce (Large)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212163/image_063_yseugd.jpg", "name": "Cholimex Sa Tế Tôm XO", "flavor": "Shrimp Satay XO", "cat": "Condiments, Spices & Baking", "name_vi": "Cholimex Sa Tế Tôm XO", "name_en": "Cholimex Shrimp Satay XO"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212165/image_064_zwi6d4.jpg", "name": "Bạc Xỉu 50 Sticks (750g)", "flavor": "White Coffee — 50 Sticks", "cat": "Coffee & Tea", "name_vi": "Bạc Xỉu 50 Sticks (750g)", "name_en": "Cộng White Coffee 50 Sticks (750g)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212165/image_065_d8wk9w.jpg", "name": "Bạc Xỉu — 5 & 12 Gói", "flavor": "White Coffee — 75g / 180g", "cat": "Coffee & Tea", "name_vi": "Bạc Xỉu — 5 & 12 Gói", "name_en": "Cộng White Coffee — 5 & 12 Sachets"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212165/image_066_ntqfao.jpg", "name": "Bạc Xỉu — 5 Gói (75g)", "flavor": "White Coffee — 15g × 5", "cat": "Coffee & Tea", "name_vi": "Bạc Xỉu — 5 Gói (75g)", "name_en": "Cộng White Coffee — 5 Sachets (75g)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212165/image_067_dnnf3y.jpg", "name": "Cà Phê Sữa — 5 & 12 Gói", "flavor": "Brown Coffee / Milk — 85g / 204g", "cat": "Coffee & Tea", "name_vi": "Cà Phê Sữa — 5 & 12 Gói", "name_en": "Cộng Milk Coffee — 5 & 12 Sachets"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212166/image_068_hxahmn.jpg", "name": "Cà Phê Sữa — 5 Gói (85g)", "flavor": "Brown Coffee / Milk — 17g × 5", "cat": "Coffee & Tea", "name_vi": "Cà Phê Sữa — 5 Gói (85g)", "name_en": "Cộng Milk Coffee — 5 Sachets (85g)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212166/image_069_uaqham.jpg", "name": "Cốt Dừa Cà Phê — 5 & 12 Gói", "flavor": "Coconut Coffee — 75g / 180g", "cat": "Coffee & Tea", "name_vi": "Cốt Dừa Cà Phê — 5 & 12 Gói", "name_en": "Cộng Coconut Coffee — 5 & 12 Sachets"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212166/image_070_zgntmt.jpg", "name": "Cốt Dừa Cà Phê — 5 Gói (75g)", "flavor": "Coconut Coffee — 15g × 5", "cat": "Coffee & Tea", "name_vi": "Cốt Dừa Cà Phê — 5 Gói (75g)", "name_en": "Cộng Coconut Coffee — 5 Sachets (75g)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212166/image_071_nbd7vd.jpg", "name": "Ba Vị Hòa Tan — Hộp Đỏ (18 Gói)", "flavor": "3 Flavors Mix — 18 Sticks Red", "cat": "Coffee & Tea", "name_vi": "Ba Vị Hòa Tan — Hộp Đỏ (18 Gói)", "name_en": "Cộng 3-Flavor Mix — Red Box (18 Sticks)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212166/image_072_dytmxd.jpg", "name": "Ba Vị Hòa Tan — Hộp Xanh (18 Gói)", "flavor": "3 Flavors Mix — 18 Sticks Green", "cat": "Coffee & Tea", "name_vi": "Ba Vị Hòa Tan — Hộp Xanh (18 Gói)", "name_en": "Cộng 3-Flavor Mix — Green Box (18 Sticks)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212167/image_073_a9j7r0.jpg", "name": "Bốn Vị Hòa Tan — 3 Màu (8 Gói)", "flavor": "4 Flavors Mix — Yellow / Green / Red", "cat": "Coffee & Tea", "name_vi": "Bốn Vị Hòa Tan — 3 Màu (8 Gói)", "name_en": "Cộng 4-Flavor Mix — 3 Colors (8 Sticks)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212170/image_074_hrtq9t.jpg", "name": "Bốn Vị Hòa Tan — Hộp Vàng (8 Gói)", "flavor": "4 Flavors Mix — 128g / 8 Sticks", "cat": "Coffee & Tea", "name_vi": "Bốn Vị Hòa Tan — Hộp Vàng (8 Gói)", "name_en": "Cộng 4-Flavor Mix — Gold Box (8 Sticks)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212170/image_075_hcmck8.jpg", "name": "Cà Phê Cộng Việt Nam (454g)", "flavor": "Ground Coffee — 16 oz", "cat": "Coffee & Tea", "name_vi": "Cà Phê Cộng Việt Nam (454g)", "name_en": "Cộng Vietnam Ground Coffee (454g)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212171/image_076_ighn3p.jpg", "name": "Cà Phê Phin Giấy Cộng", "flavor": "100% Robusta Drip Bags", "cat": "Coffee & Tea", "name_vi": "Cà Phê Phin Giấy Cộng", "name_en": "Cộng Paper Drip Filter Coffee"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212171/image_077_ezarwn.jpg", "name": "Hộp Phin + Cà Phê Chủ Nghĩa", "flavor": "Gift Set — Robusta Natural & Honey", "cat": "Coffee & Tea", "name_vi": "Hộp Phin + Cà Phê Chủ Nghĩa", "name_en": "Cộng Drip Gift Set — Chủ Nghĩa"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212171/image_078_jsgxna.jpg", "name": "Hộp Phin + Cà Phê Độc Lập", "flavor": "Gift Set — Robusta Honey Process", "cat": "Coffee & Tea", "name_vi": "Hộp Phin + Cà Phê Độc Lập", "name_en": "Cộng Drip Gift Set — Độc Lập"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212171/image_079_mocwtl.jpg", "name": "Hộp Phin + Cà Phê Hạnh Phúc", "flavor": "Gift Set — Robusta × Arabica × Quế", "cat": "Coffee & Tea", "name_vi": "Hộp Phin + Cà Phê Hạnh Phúc", "name_en": "Cộng Drip Gift Set — Hạnh Phúc"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212171/image_080_aq6s3n.jpg", "name": "Hộp Phin + Cà Phê Tự Do", "flavor": "Gift Set — Robusta × Arabica", "cat": "Coffee & Tea", "name_vi": "Hộp Phin + Cà Phê Tự Do", "name_en": "Cộng Drip Gift Set — Tự Do"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212171/image_081_ubuoxc.jpg", "name": "Hộp Phin + Cà Phê Việt Nam", "flavor": "Gift Set — Robusta × Arabica + Quế", "cat": "Coffee & Tea", "name_vi": "Hộp Phin + Cà Phê Việt Nam", "name_en": "Cộng Drip Gift Set — Việt Nam"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212762/ChinSu-CHAIMOCKUP-OTSATUOI_trgdyz.jpg", "name": "Chin Su Ớt Sa Tươi", "cat": "Sauces", "name_vi": "Chin Su Ớt Sa Tươi", "name_en": "Chin Su Fresh Chili Satay"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212774/ChinSu-CHINSU120-Mockup-New-scaled_kof4ab.jpg", "name": "Chin Su Nước Mắm 120ml", "cat": "Sauces", "name_vi": "Chin Su Nước Mắm 120ml", "name_en": "Chin Su Fish Sauce 120ml"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212770/ChinSu-Chai-NN-OTLS-300ml-scaled_zuupnj.jpg", "name": "Chin Su Nước Ớt Lên Men 300ml", "cat": "Sauces", "name_vi": "Chin Su Nước Ớt Lên Men 300ml", "name_en": "Chin Su Fermented Chili Sauce 300ml"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212789/ChinSu-Hu-HN-NAM-VN_urkgz7.jpg", "name": "Chin Su Tương Hoisin", "cat": "Sauces", "name_vi": "Chin Su Tương Hoisin", "name_en": "Chin Su Hoisin Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212794/ChinSu-MOCKUP-TIEU-DEN-XAY-CHIN-SU_chnrqr.jpg", "name": "Chin Su Tiêu Đen Xay", "cat": "Condiments, Spices & Baking", "name_vi": "Chin Su Tiêu Đen Xay", "name_en": "Chin Su Ground Black Pepper"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212793/ChinSu-Mockup-DH-400gr-1_gt2iqn.jpg", "name": "Chin Su Dưa Hấu 400g", "cat": "Preserved Goods", "name_vi": "Chin Su Dưa Hấu 400g", "name_en": "Chin Su Pickled Vegetables 400g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212868/ChinSu-Mockup-Toi-ot_tndv3g.jpg", "name": "Chin Su Tỏi Ớt", "cat": "Condiments, Spices & Baking", "name_vi": "Chin Su Tỏi Ớt", "name_en": "Chin Su Garlic Chili"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212877/ChinSu-New-MK-NMCS-365-NGAY-700ML-scaled_tqskym.jpg", "name": "Chin Su Nước Mắm 365 Ngày 700ml", "cat": "Sauces", "name_vi": "Chin Su Nước Mắm 365 Ngày 700ml", "name_en": "Chin Su Fish Sauce 365 Days 700ml"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212884/ChinSu-WaterColor-Mockup-Muoi-Ot-Do-scaled_mgjzgw.jpg", "name": "Chin Su Muối Ớt Đỏ", "cat": "Condiments, Spices & Baking", "name_vi": "Chin Su Muối Ớt Đỏ", "name_en": "Chin Su Red Chili Salt"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212885/ChinSu-XGV-GA-CHIEN-FRONT-scaled_yi9nce.jpg", "name": "Chin Su Xốt Gà Chiên", "cat": "Sauces", "name_vi": "Chin Su Xốt Gà Chiên", "name_en": "Chin Su Fried Chicken Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212885/ChinSu-XGV-LAU-80g-FRONT-scaled_hdoc7n.jpg", "name": "Chin Su Xốt Lẩu 80g", "cat": "Sauces", "name_vi": "Chin Su Xốt Lẩu 80g", "name_en": "Chin Su Hot Pot Sauce 80g"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212889/ChinSu-XGV-MUOI-OT-FRONT-scaled_y48rlb.jpg", "name": "Chin Su Xốt Muối Ớt", "cat": "Sauces", "name_vi": "Chin Su Xốt Muối Ớt", "name_en": "Chin Su Chili Salt Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212886/ChinSu-XGV-Mockup-SCN-scaled_d8m18u.jpg", "name": "Chin Su Xốt Cà Nướng", "cat": "Sauces", "name_vi": "Chin Su Xốt Cà Nướng", "name_en": "Chin Su Grilled Eggplant Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212889/ChinSu-XGV-PHO-MAI-FRONT-scaled_wap8n8.jpg", "name": "Chin Su Xốt Phô Mai", "cat": "Sauces", "name_vi": "Chin Su Xốt Phô Mai", "name_en": "Chin Su Cheese Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212890/ChinSu-XGV-THIT-KHO-FRONT-scaled_riobww.jpg", "name": "Chin Su Xốt Thịt Kho", "cat": "Sauces", "name_vi": "Chin Su Xốt Thịt Kho", "name_en": "Chin Su Braised Pork Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212892/ChinSu-XGV-THIT-NUONG-FRONT-scaled_ut7xka.jpg", "name": "Chin Su Xốt Thịt Nướng", "cat": "Sauces", "name_vi": "Chin Su Xốt Thịt Nướng", "name_en": "Chin Su Grilled Meat Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212790/ChinSu-hu-tieu-bo-kho-1-removebg-preview-1_jdima1.jpg", "name": "Chin Su Hủ Tiêu Bò Khô (Hủ)", "cat": "Noodles & Pasta", "name_vi": "Chin Su Hủ Tiêu Bò Khô (Hủ)", "name_en": "Chin Su Beef Dry Noodle Soup (Bowl)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212792/ChinSu-hu-tieu-bo-kho-dang-goi-removebg-preview_g72fze.jpg", "name": "Chin Su Hủ Tiêu Bò Khô (Gói)", "cat": "Noodles & Pasta", "name_vi": "Chin Su Hủ Tiêu Bò Khô (Gói)", "name_en": "Chin Su Beef Dry Noodle Soup (Pack)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212792/ChinSu-mien-ga-dang-goi-removebg-preview-1_ojtusl.jpg", "name": "Chin Su Miến Gà", "cat": "Noodles & Pasta", "name_vi": "Chin Su Miến Gà", "name_en": "Chin Su Chicken Glass Noodles"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212872/ChinSu-nuoc-mam-tet-2023-min-1_is3hig.jpg", "name": "Chin Su Nước Mắm Tết 2023", "cat": "Sauces", "name_vi": "Chin Su Nước Mắm Tết 2023", "name_en": "Chin Su Fish Sauce Tết Edition 2023"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212882/ChinSu-pho-bo-min-1-1_gnjs9z.jpg", "name": "Chin Su Phở Bò", "cat": "Noodles & Pasta", "name_vi": "Chin Su Phở Bò", "name_en": "Chin Su Beef Pho"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212893/ChinSu-xot-ga-chien-nuoc-mam-min_ighvn9.jpg", "name": "Chin Su Xốt Gà Chiên Nước Mắm", "cat": "Sauces", "name_vi": "Chin Su Xốt Gà Chiên Nước Mắm", "name_en": "Chin Su Fish Sauce Glazed Chicken"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212894/ChinSu-xot-thit-kho-min_ciu0oo.jpg", "name": "Chin Su Xốt Thịt Kho", "cat": "Sauces", "name_vi": "Chin Su Xốt Thịt Kho", "name_en": "Chin Su Braised Pork Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212198/MamNemDiCan-B-nh-Tr-ng-i-L-c-Ph-ng-Ho-ng-Cu-n-L-M_psbrcl.jpg", "name": "Bánh Tráng Di Lặc Cuốn Lá Mít", "cat": "Preserved Goods", "name_vi": "Bánh Tráng Di Lặc Cuốn Lá Mít", "name_en": "Di Lac Rice Paper with Jackfruit Leaf"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212198/MamNemDiCan-D-a-M-n-c-Bi-t-D-C-n_p3eozc.jpg", "name": "Dưa Muối Đặc Biệt Dì Cẩn", "cat": "Preserved Goods", "name_vi": "Dưa Muối Đặc Biệt Dì Cẩn", "name_en": "Dì Cẩn Special Pickled Vegetables"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212202/MamNemDiCan-M-m-C-Gi-D-C-n-c-S-n-N-ng_yuewuc.jpg", "name": "Mắm Cá Giỏ Dì Cẩn", "cat": "Preserved Goods", "name_vi": "Mắm Cá Giỏ Dì Cẩn", "name_en": "Dì Cẩn Basket Fish Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212208/MamNemDiCan-M-m-D-a-c-Bi-t-D-C-n_jmdlya.jpg", "name": "Mắm Dưa Đặc Biệt Dì Cẩn", "cat": "Preserved Goods", "name_vi": "Mắm Dưa Đặc Biệt Dì Cẩn", "name_en": "Dì Cẩn Special Pickled Cucumber Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212211/MamNemDiCan-M-m-N-m-Thu-c-Bi-t-D-C-n_eyifq9.jpg", "name": "Mắm Nấm Thượng Đặc Biệt", "cat": "Preserved Goods", "name_vi": "Mắm Nấm Thượng Đặc Biệt", "name_en": "Premium Mushroom Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212211/MamNemDiCan-M-m-N-m-c-Bi-t-D-C-n_l7wknc.jpg", "name": "Mắm Nấm Đặc Biệt Dì Cẩn", "cat": "Preserved Goods", "name_vi": "Mắm Nấm Đặc Biệt Dì Cẩn", "name_en": "Dì Cẩn Special Mushroom Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212210/MamNemDiCan-M-m-N-m-c-Bi-t-D-C-n_1_1_ms59jf.jpg", "name": "Mắm Nấm Đặc Biệt Dì Cẩn", "cat": "Preserved Goods", "name_vi": "Mắm Nấm Đặc Biệt Dì Cẩn", "name_en": "Dì Cẩn Special Mushroom Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212215/MamNemDiCan-M-m-Ru-c-Ch-c-Bi-t-D-C-n_g7q7pv.jpg", "name": "Mắm Ruốc Đặc Biệt Dì Cẩn", "cat": "Preserved Goods", "name_vi": "Mắm Ruốc Đặc Biệt Dì Cẩn", "name_en": "Dì Cẩn Special Shrimp Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212214/MamNemDiCan-M-m-Ru-c-Ch-c-Bi-t-D-C-n_1_1_kedkn2.jpg", "name": "Mắm Ruốc Đặc Biệt Dì Cẩn", "cat": "Preserved Goods", "name_vi": "Mắm Ruốc Đặc Biệt Dì Cẩn", "name_en": "Dì Cẩn Special Shrimp Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212222/MamNemDiCan-M-m-T-m-Chua-c-Bi-t-D-C-n_jj2qqk.jpg", "name": "Mắm Tôm Chua Đặc Biệt", "cat": "Preserved Goods", "name_vi": "Mắm Tôm Chua Đặc Biệt", "name_en": "Special Sour Shrimp Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212221/MamNemDiCan-M-m-T-m-Chua-c-Bi-t-D-C-n_1_1_ankmpn.jpg", "name": "Mắm Tôm Chua Đặc Biệt", "cat": "Preserved Goods", "name_vi": "Mắm Tôm Chua Đặc Biệt", "name_en": "Special Sour Shrimp Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212217/MamNemDiCan-M-m-T-m-c-Bi-t-Ba-L-ng-T-nh-Gia-Thanh-H-a_nglvnb.jpg", "name": "Mắm Tôm Đặc Biệt Ba Làng Thanh Hóa", "cat": "Preserved Goods", "name_vi": "Mắm Tôm Đặc Biệt Ba Làng Thanh Hóa", "name_en": "Ba Làng Special Shrimp Paste Thanh Hóa"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212216/MamNemDiCan-M-m-T-m-c-Bi-t-Ba-L-ng-T-nh-Gia-Thanh-H-a-D-nh-Cho-Nh-H-ng_wi1jfn.jpg", "name": "Mắm Tôm Ba Làng Thanh Hóa (Nhà Hàng)", "cat": "Preserved Goods", "name_vi": "Mắm Tôm Ba Làng Thanh Hóa (Nhà Hàng)", "name_en": "Ba Làng Shrimp Paste Thanh Hóa (Restaurant Grade)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212218/MamNemDiCan-M-m-T-m-c-Bi-t-Ba-L-ng-Thanh-H-a_tlbojk.jpg", "name": "Mắm Tôm Ba Làng Thanh Hóa", "cat": "Preserved Goods", "name_vi": "Mắm Tôm Ba Làng Thanh Hóa", "name_en": "Ba Làng Shrimp Paste Thanh Hóa"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212224/MamNemDiCan-M-m-T-p-Chua-Cay-n-Ngay-c-S-n-Ba-L-ng-T-nh-Gia-Thanh-H-a_xixchz.jpg", "name": "Mắm Tép Chua Cay Ba Làng Thanh Hóa", "cat": "Preserved Goods", "name_vi": "Mắm Tép Chua Cay Ba Làng Thanh Hóa", "name_en": "Ba Làng Spicy Sour Shrimp Paste Thanh Hóa"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212223/MamNemDiCan-M-m-T-p-Chua-c-Bi-t-n-Ngay-c-S-n-Ba-L-ng-T-nh-Gia-Thanh-H-a_qebrsp.jpg", "name": "Mắm Tép Chua Đặc Biệt Ba Làng", "cat": "Preserved Goods", "name_vi": "Mắm Tép Chua Đặc Biệt Ba Làng", "name_en": "Ba Làng Special Sour Shrimp Paste"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212226/MamNemDiCan-M-m-T-p-ng-D-ng-Ch-ng-Th-t-c-S-n-Ba-L-ng-T-nh-Gia-Thanh-H-a_xmtewn.jpg", "name": "Mắm Tép Dùng Chung Thịt Ba Làng", "cat": "Preserved Goods", "name_vi": "Mắm Tép Dùng Chung Thịt Ba Làng", "name_en": "Ba Làng Shrimp Paste with Pork"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212228/MamNemDiCan-N-c-M-m-C-Cu-ng-Nguy-n-Con-Th-ng-H-o-H-ng-V-n-V-n_l11joi.jpg", "name": "Nước Mắm Cá Cương Nguyên Chất", "cat": "Sauces", "name_vi": "Nước Mắm Cá Cương Nguyên Chất", "name_en": "Pure Cá Cương Fish Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212228/MamNemDiCan-N-c-M-m-Nguy-n-Ch-t-D-C-n-N-ng_txjfdd.jpg", "name": "Nước Mắm Nguyên Chất Dì Cẩn", "cat": "Sauces", "name_vi": "Nước Mắm Nguyên Chất Dì Cẩn", "name_en": "Dì Cẩn Pure Fish Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212232/MamNemDiCan-N-c-M-m-R-t-N-C-C-m-Ba-L-ng-Thanh-H-a_gudiqd.jpg", "name": "Nước Mắm Cá Cơm Ba Làng Thanh Hóa", "cat": "Sauces", "name_vi": "Nước Mắm Cá Cơm Ba Làng Thanh Hóa", "name_en": "Ba Làng Anchovy Fish Sauce Thanh Hóa"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212212/MamNemDiCan-M-m-N-m-Thu-c-Bi-t-D-C-n_1_t4llas.jpg", "name": "Nước Mắm Siêu Thượng Hạng", "cat": "Sauces", "name_vi": "Nước Mắm Siêu Thượng Hạng", "name_en": "Ultra Premium Fish Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212237/MamNemDiCan-T-ng-B-n-c-S-n-H-ng-Y-n_zj3ldd.jpg", "name": "Tương Bần Đặc Sản Hưng Yên", "cat": "Sauces", "name_vi": "Tương Bần Đặc Sản Hưng Yên", "name_en": "Bần Specialty Soybean Sauce (Hưng Yên)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212234/MamNemDiCan-T-ng-B-n-c-S-n-H-ng-Y-n_1_1_ym4bvt.jpg", "name": "Tương Bần Đặc Sản Hưng Yên", "cat": "Sauces", "name_vi": "Tương Bần Đặc Sản Hưng Yên", "name_en": "Bần Specialty Soybean Sauce (Hưng Yên)"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212237/MamNemDiCan-T-ng-t-Ch-ng-c-Bi-t-D-C-n_o6lnyn.jpg", "name": "Tương Ớt Chưng Đặc Biệt", "cat": "Sauces", "name_vi": "Tương Ớt Chưng Đặc Biệt", "name_en": "Special Sautéed Chili Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212613/Omachi-Omachi-Masan-Consumer_10_zi3i9o.jpg", "name": "Omachi Chua Cay Hải Sản", "cat": "Instant Noodles", "name_vi": "Omachi Chua Cay Hải Sản", "name_en": "Omachi Spicy Sour Seafood"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212616/Omachi-Omachi-Masan-Consumer_11_of46oq.jpg", "name": "Omachi Xốt Phô Mai", "cat": "Instant Noodles", "name_vi": "Omachi Xốt Phô Mai", "name_en": "Omachi Cheese Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212616/Omachi-Omachi-Masan-Consumer_12_kemh40.jpg", "name": "Omachi Hải Sản", "cat": "Instant Noodles", "name_vi": "Omachi Hải Sản", "name_en": "Omachi Seafood"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212617/Omachi-Omachi-Masan-Consumer_13_xelpjm.jpg", "name": "Omachi Tôm Chua Ngọt", "cat": "Instant Noodles", "name_vi": "Omachi Tôm Chua Ngọt", "name_en": "Omachi Sweet & Sour Shrimp"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212618/Omachi-Omachi-Masan-Consumer_14_f4hlza.jpg", "name": "Omachi Bò Kho", "cat": "Instant Noodles", "name_vi": "Omachi Bò Kho", "name_en": "Omachi Beef Stew"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212619/Omachi-Omachi-Masan-Consumer_15_koaice.jpg", "name": "Omachi Sả Ớt", "cat": "Instant Noodles", "name_vi": "Omachi Sả Ớt", "name_en": "Omachi Lemongrass Chili"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212620/Omachi-Omachi-Masan-Consumer_16_mq6rrh.jpg", "name": "Omachi Cà Ri Gà", "cat": "Instant Noodles", "name_vi": "Omachi Cà Ri Gà", "name_en": "Omachi Chicken Curry"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212621/Omachi-Omachi-Masan-Consumer_17_rvrdui.jpg", "name": "Omachi Thịt Bò Nướng", "cat": "Instant Noodles", "name_vi": "Omachi Thịt Bò Nướng", "name_en": "Omachi Grilled Beef"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212622/Omachi-Omachi-Masan-Consumer_18_tuxgxs.jpg", "name": "Omachi Trứng Muối", "cat": "Instant Noodles", "name_vi": "Omachi Trứng Muối", "name_en": "Omachi Salted Egg"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212607/Omachi-Omachi-Masan-Consumer_2_gssymy.jpg", "name": "Omachi Xốt Bò Hầm", "cat": "Instant Noodles", "name_vi": "Omachi Xốt Bò Hầm", "name_en": "Omachi Braised Beef Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212607/Omachi-Omachi-Masan-Consumer_3_cja7ta.jpg", "name": "Omachi Sườn Hầm Tiêu Đen", "cat": "Instant Noodles", "name_vi": "Omachi Sườn Hầm Tiêu Đen", "name_en": "Omachi Black Pepper Braised Ribs"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212608/Omachi-Omachi-Masan-Consumer_4_cihaoa.jpg", "name": "Omachi Bò Gân Hầm Tiêu", "cat": "Instant Noodles", "name_vi": "Omachi Bò Gân Hầm Tiêu", "name_en": "Omachi Pepper Braised Beef Tendon"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212610/Omachi-Omachi-Masan-Consumer_5_k2bkwr.jpg", "name": "Omachi Kim Chi", "cat": "Instant Noodles", "name_vi": "Omachi Kim Chi", "name_en": "Omachi Kimchi"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212611/Omachi-Omachi-Masan-Consumer_6_bfaqxe.jpg", "name": "Omachi Tom Yum", "cat": "Instant Noodles", "name_vi": "Omachi Tom Yum", "name_en": "Omachi Tom Yum"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212611/Omachi-Omachi-Masan-Consumer_7_vvsmcu.jpg", "name": "Omachi Xốt Kem Chua", "cat": "Instant Noodles", "name_vi": "Omachi Xốt Kem Chua", "name_en": "Omachi Sour Cream Sauce"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212612/Omachi-Omachi-Masan-Consumer_8_z3ce1o.jpg", "name": "Omachi Bò Gân Sa Tế", "cat": "Instant Noodles", "name_vi": "Omachi Bò Gân Sa Tế", "name_en": "Omachi Beef Tendon Satay"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212613/Omachi-Omachi-Masan-Consumer_9_qyd5hw.jpg", "name": "Omachi Gà Nướng", "cat": "Instant Noodles", "name_vi": "Omachi Gà Nướng", "name_en": "Omachi Grilled Chicken"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213152/Safoco_CARROT_NOODLES_-_250g_cuvndh.jpg", "name": "Safoco Carrot Noodles 250G", "cat": "Noodles & Pasta", "name_vi": "Safoco Carrot Noodles 250G", "name_en": "Safoco Carrot Noodles 250G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213153/Safoco_EGG_NOODLES__THICK_STRING__SAFOCO_-_500g_dihyop.jpg", "name": "Safoco Egg Noodles Thick String Safoco 500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Egg Noodles Thick String Safoco 500G", "name_en": "Safoco Egg Noodles Thick String Safoco 500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212946/Safoco_EGG_NOODLES__THIN_STRING__SAFOCO_-_500g_uf4obz.jpg", "name": "Safoco Egg Noodles Thin String Safoco 500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Egg Noodles Thin String Safoco 500G", "name_en": "Safoco Egg Noodles Thin String Safoco 500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213162/Safoco_FRESH_RICE_VERMICELLI_-_300g_iicf1z.jpg", "name": "Safoco Fresh Rice Vermicelli 300G", "cat": "Noodles & Pasta", "name_vi": "Safoco Fresh Rice Vermicelli 300G", "name_en": "Safoco Fresh Rice Vermicelli 300G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213166/Safoco_FRIED_HIGH_QUALITY_NOODLE_-_500g_juoeem.jpg", "name": "Safoco Fried High Quality Noodle 500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Fried High Quality Noodle 500G", "name_en": "Safoco Fried High Quality Noodle 500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212953/Safoco_FRIED_RICE_VERMICELLI_-_300g_xfhbuz.jpg", "name": "Safoco Fried Rice Vermicelli 300G", "cat": "Noodles & Pasta", "name_vi": "Safoco Fried Rice Vermicelli 300G", "name_en": "Safoco Fried Rice Vermicelli 300G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213175/Safoco_FRIED_RICE_VERMICELLI_-_500g_unh8hb.jpg", "name": "Safoco Fried Rice Vermicelli 500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Fried Rice Vermicelli 500G", "name_en": "Safoco Fried Rice Vermicelli 500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213178/Safoco_GREEN_BEAN_MACARONI__PENNE_SHAPED__-_300g_lixock.jpg", "name": "Safoco Green Bean Macaroni Penne Shaped  300G", "cat": "Noodles & Pasta", "name_vi": "Safoco Green Bean Macaroni Penne Shaped  300G", "name_en": "Safoco Green Bean Macaroni Penne Shaped  300G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213183/Safoco_GREEN_BEAN_MACARONI__SPIRAL_SHAPED__-_200g_bulxuj.jpg", "name": "Safoco Green Bean Macaroni Spiral Shaped  200G", "cat": "Noodles & Pasta", "name_vi": "Safoco Green Bean Macaroni Spiral Shaped  200G", "name_en": "Safoco Green Bean Macaroni Spiral Shaped  200G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213186/Safoco_HIGH_QUALITY_EGG_NOODLES_-_500g_gt5gmr.jpg", "name": "Safoco High Quality Egg Noodles 500G", "cat": "Noodles & Pasta", "name_vi": "Safoco High Quality Egg Noodles 500G", "name_en": "Safoco High Quality Egg Noodles 500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212966/Safoco_HIGH_QUALITY_MACARONI__BIG_TUBE__-_400g_qfq8o4.jpg", "name": "Safoco High Quality Macaroni Big Tube  400G", "cat": "Noodles & Pasta", "name_vi": "Safoco High Quality Macaroni Big Tube  400G", "name_en": "Safoco High Quality Macaroni Big Tube  400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212970/Safoco_HIGH_QUALITY_MACARONI__SHORT_TUBE__-_500g_hhwwx4.jpg", "name": "Safoco High Quality Macaroni Short Tube  500G", "cat": "Noodles & Pasta", "name_vi": "Safoco High Quality Macaroni Short Tube  500G", "name_en": "Safoco High Quality Macaroni Short Tube  500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212973/Safoco_HIGH_QUALITY_MACARONI__SPIRAL_SHAPED__-_400g_dvh1lq.jpg", "name": "Safoco High Quality Macaroni Spiral Shaped  400G", "cat": "Noodles & Pasta", "name_vi": "Safoco High Quality Macaroni Spiral Shaped  400G", "name_en": "Safoco High Quality Macaroni Spiral Shaped  400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213206/Safoco_INSTANT_COOKING_MACARONI_-_60g_b3acq9.jpg", "name": "Safoco Instant Cooking Macaroni 60G", "cat": "Noodles & Pasta", "name_vi": "Safoco Instant Cooking Macaroni 60G", "name_en": "Safoco Instant Cooking Macaroni 60G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212977/Safoco_MACARONI__BIG_TUBE_SAFOCO__-_400g_diepf6.jpg", "name": "Safoco Macaroni Big Tube Safoco  400G", "cat": "Noodles & Pasta", "name_vi": "Safoco Macaroni Big Tube Safoco  400G", "name_en": "Safoco Macaroni Big Tube Safoco  400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213217/Safoco_MACARONI__BIG_TUBE__-_400g_rjz4nc.jpg", "name": "Safoco Macaroni Big Tube  400G", "cat": "Noodles & Pasta", "name_vi": "Safoco Macaroni Big Tube  400G", "name_en": "Safoco Macaroni Big Tube  400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213223/Safoco_MACARONI__CIRCULAR_BOW_SHAPED__-_200g_ps6z5j.jpg", "name": "Safoco Macaroni Circular Bow Shaped  200G", "cat": "Noodles & Pasta", "name_vi": "Safoco Macaroni Circular Bow Shaped  200G", "name_en": "Safoco Macaroni Circular Bow Shaped  200G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212986/Safoco_MACARONI__SHORT_TUBE_SAFOCO__-_500g_joszho.jpg", "name": "Safoco Macaroni Short Tube Safoco  500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Macaroni Short Tube Safoco  500G", "name_en": "Safoco Macaroni Short Tube Safoco  500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213229/Safoco_MACARONI__SHORT_TUBE__-_400g_dlevzu.jpg", "name": "Safoco Macaroni Short Tube  400G", "cat": "Noodles & Pasta", "name_vi": "Safoco Macaroni Short Tube  400G", "name_en": "Safoco Macaroni Short Tube  400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212990/Safoco_MACARONI__SPIRAL_SHAPED_SAFOCO__-_300g_d6fiuc.jpg", "name": "Safoco Macaroni Spiral Shaped Safoco  300G", "cat": "Noodles & Pasta", "name_vi": "Safoco Macaroni Spiral Shaped Safoco  300G", "name_en": "Safoco Macaroni Spiral Shaped Safoco  300G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213235/Safoco_POTATO_NOODLES_-_250g_gglzlt.jpg", "name": "Safoco Potato Noodles 250G", "cat": "Noodles & Pasta", "name_vi": "Safoco Potato Noodles 250G", "name_en": "Safoco Potato Noodles 250G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213240/Safoco_PREMIUM_EGG_NOODLES_-_400g_ofrj8w.jpg", "name": "Safoco Premium Egg Noodles 400G", "cat": "Noodles & Pasta", "name_vi": "Safoco Premium Egg Noodles 400G", "name_en": "Safoco Premium Egg Noodles 400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213242/Safoco_RICE_MACARONI__BIG_TUBE__-_400g_ig2wwl.jpg", "name": "Safoco Rice Macaroni Big Tube  400G", "cat": "Noodles & Pasta", "name_vi": "Safoco Rice Macaroni Big Tube  400G", "name_en": "Safoco Rice Macaroni Big Tube  400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213002/Safoco_RICE_MACARONI__PENNE_SHAPED__-_400g_jyedkj.jpg", "name": "Safoco Rice Macaroni Penne Shaped  400G", "cat": "Noodles & Pasta", "name_vi": "Safoco Rice Macaroni Penne Shaped  400G", "name_en": "Safoco Rice Macaroni Penne Shaped  400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213004/Safoco_RICE_MACARONI__SHORT_TUBE__-_500g_yypahm.jpg", "name": "Safoco Rice Macaroni Short Tube  500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Rice Macaroni Short Tube  500G", "name_en": "Safoco Rice Macaroni Short Tube  500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213254/Safoco_RICE_MACARONI__SPIRAL_SHAPED__-_300g_uixlsl.jpg", "name": "Safoco Rice Macaroni Spiral Shaped  300G", "cat": "Noodles & Pasta", "name_vi": "Safoco Rice Macaroni Spiral Shaped  300G", "name_en": "Safoco Rice Macaroni Spiral Shaped  300G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213012/Safoco_RICE_PAPER__SIZE_16cm_w5jsov.jpg", "name": "Safoco Rice Paper Size 16Cm", "cat": "Noodles & Pasta", "name_vi": "Safoco Rice Paper Size 16Cm", "name_en": "Safoco Rice Paper Size 16Cm"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213012/Safoco_RICE_PAPER__SIZE_22cm_lyaulj.jpg", "name": "Safoco Rice Paper Size 22Cm", "cat": "Noodles & Pasta", "name_vi": "Safoco Rice Paper Size 22Cm", "name_en": "Safoco Rice Paper Size 22Cm"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213018/Safoco_RICE_VERMICELLI_-_400g_g4usxw.jpg", "name": "Safoco Rice Vermicelli 400G", "cat": "Noodles & Pasta", "name_vi": "Safoco Rice Vermicelli 400G", "name_en": "Safoco Rice Vermicelli 400G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213020/Safoco_VEGETABLE_MACARONI__BIG_TUBE__-_500g_drrdkl.jpg", "name": "Safoco Vegetable Macaroni Big Tube  500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Macaroni Big Tube  500G", "name_en": "Safoco Vegetable Macaroni Big Tube  500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213023/Safoco_VEGETABLE_MACARONI__CIRCULAR_BOW_SHAPED__-_200g_f7wmql.jpg", "name": "Safoco Vegetable Macaroni Circular Bow Shaped  200G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Macaroni Circular Bow Shaped  200G", "name_en": "Safoco Vegetable Macaroni Circular Bow Shaped  200G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213028/Safoco_VEGETABLE_MACARONI__OYSTER_SHAPED__-_500g_ikmah9.jpg", "name": "Safoco Vegetable Macaroni Oyster Shaped  500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Macaroni Oyster Shaped  500G", "name_en": "Safoco Vegetable Macaroni Oyster Shaped  500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213026/Safoco_VEGETABLE_MACARONI__PYRAMIDAL_SHAPED__-_200g_hztcal.jpg", "name": "Safoco Vegetable Macaroni Pyramidal Shaped  200G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Macaroni Pyramidal Shaped  200G", "name_en": "Safoco Vegetable Macaroni Pyramidal Shaped  200G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213030/Safoco_VEGETABLE_MACARONI__SHORT_TUBE__-_500g_o7i3xn.jpg", "name": "Safoco Vegetable Macaroni Short Tube  500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Macaroni Short Tube  500G", "name_en": "Safoco Vegetable Macaroni Short Tube  500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213039/Safoco_VEGETABLE_MACARONI__SPIRAL_SHAPED__-_300g_av7x9r.jpg", "name": "Safoco Vegetable Macaroni Spiral Shaped  300G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Macaroni Spiral Shaped  300G", "name_en": "Safoco Vegetable Macaroni Spiral Shaped  300G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213045/Safoco_VEGETABLE_NOODLES__SPINACH__-_250g_ibp3yo.jpg", "name": "Safoco Vegetable Noodles Spinach  250G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Noodles Spinach  250G", "name_en": "Safoco Vegetable Noodles Spinach  250G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213051/Safoco_VEGETABLE_NOODLES__THIN_STRING__-_500g_e2omo8.jpg", "name": "Safoco Vegetable Noodles Thin String  500G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetable Noodles Thin String  500G", "name_en": "Safoco Vegetable Noodles Thin String  500G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774213352/Safoco_VEGETARIAN_NOODLE_-_350g_dnw2ra.jpg", "name": "Safoco Vegetarian Noodle 350G", "cat": "Noodles & Pasta", "name_vi": "Safoco Vegetarian Noodle 350G", "name_en": "Safoco Vegetarian Noodle 350G"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212896/1.-Phin-Giay-O-Long-Nhai-Sua-scaled_uoie7i.jpg", "name": "Phê La Phin Giấy Ô Long Nhài Sữa", "cat": "Coffee & Tea", "name_vi": "Phê La Phin Giấy Ô Long Nhài Sữa", "name_en": "Phê La Oolong Jasmine Milk Drip Bag"}, {"src": "https://res.cloudinary.com/dqaqvyric/image/upload/v1774212897/2.-Phin-Giay-O-Long-Sua-Phe-La-scaled_xba1n8.jpg", "name": "Phê La Phin Giấy Ô Long Sữa", "cat": "Coffee & Tea", "name_vi": "Phê La Phin Giấy Ô Long Sữa", "name_en": "Phê La Oolong Milk Drip Bag"}];
+const catalogCatList = ["Beverage", "Coffee & Tea", "Condiments, Spices & Baking", "Cookies, Snacks & Candy", "Dry Goods", "Flour & Mixes", "Noodles & Pasta", "Instant Noodles", "Preserved Goods", "Preserved Meat", "Sauces", "Non-Food Items"];
+
+
+function toggleStorageGroup(groupId) {
+  var group = document.getElementById(groupId);
+  var items = document.getElementById(groupId + 'Items');
+  var isOpen = group.classList.contains('open');
+  group.classList.toggle('open', !isOpen);
+  items.style.display = isOpen ? 'none' : 'block';
+}
+
+function openCatalog(cat) {
+  document.getElementById('catalogOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (cat) {
+    showCatalogCategory(cat);
+  } else {
+    const first = catalogCatList.find(c => catalogProducts.some(p => p.cat === c));
+    if (first) showCatalogCategory(first);
+  }
+}
+function closeCatalog() {
+  document.getElementById('catalogOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function showCatalogCategory(cat) {
+  document.querySelectorAll('.catalog-sidebar-item').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim() === cat);
+  });
+  const prods = catalogProducts.filter(p => p.cat === cat);
+  const content = document.getElementById('catalogContent');
+  if (!prods.length) {
+    content.innerHTML = '<div class="catalog-content-title">' + cat + '</div><div class="catalog-empty">Exciting products coming soon!</div>';
+    return;
+  }
+  content.innerHTML = '<div class="catalog-content-title">' + cat + '</div><div class="catalog-products-grid">' +
+    prods.map(function(p) {
+      var n = (currentLang === 'vi') ? (p.name_vi || p.name) : (p.name_en || p.name);
+      return '<div class="catalog-product-card"><div class="catalog-product-img"><img src="' + p.src + '" alt="' + n + '" loading="lazy"></div><div class="catalog-product-info"><div class="catalog-product-name">' + n + '</div></div></div>';
+    }).join('') + '</div>';
+  content.scrollTo(0, 0);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCatalog(); });
+
+</script>
+
+
+<!-- CATALOG OVERLAY -->
+<div class="catalog-overlay" id="catalogOverlay">
+  <div class="catalog-topbar">
+    <div class="catalog-topbar-title">Product Catalog</div>
+    <button class="catalog-close" onclick="closeCatalog()">✕</button>
+  </div>
+  <div class="catalog-body">
+    <nav class="catalog-sidebar" id="catalogSidebar">
+      <!-- Storage type: Dry -->
+      <div class="catalog-storage-group" id="groupDry">
+        <button class="catalog-storage-label" onclick="toggleStorageGroup('groupDry')">
+          <span>Storage Type: Dry</span><span class="catalog-storage-arrow">▾</span>
+        </button>
+        <div class="catalog-storage-items" id="groupDryItems">
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Beverage')">Beverage</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Coffee & Tea')">Coffee & Tea</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Condiments, Spices & Baking')">Condiments, Spices & Baking</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Cookies, Snacks & Candy')">Cookies, Snacks & Candy</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Dry Goods')">Dry Goods</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Flour & Mixes')">Flour & Mixes</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Noodles & Pasta')">Noodles & Pasta</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Instant Noodles')">Instant Noodles</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Preserved Goods')">Preserved Goods</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Sauces')">Sauces</button>
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Non-Food Items')">Non-Food Items</button>
+        </div>
+      </div>
+      <!-- Storage type: Frozen -->
+      <div class="catalog-storage-group" id="groupFrozen">
+        <button class="catalog-storage-label" onclick="toggleStorageGroup('groupFrozen')">
+          <span>Storage Type: Frozen</span><span class="catalog-storage-arrow">▾</span>
+        </button>
+        <div class="catalog-storage-items" id="groupFrozenItems" style="display:none;">
+          <button class="catalog-sidebar-item" onclick="showCatalogCategory('Private Label')">Private Label</button>
+        </div>
+      </div>
+    </nav>
+    <div class="catalog-content" id="catalogContent">
+      <div class="catalog-empty">← Select a category to browse products</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
